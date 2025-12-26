@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase Test - Spartan Conquest</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #f5f5f5;
+        }
+        h1 { color: #FFD700; }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 2px solid;
+        }
+        .success {
+            background: rgba(40, 167, 69, 0.2);
+            border-color: #28a745;
+            color: #28a745;
+        }
+        .error {
+            background: rgba(220, 53, 69, 0.2);
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border-color: #ffc107;
+            color: #ffc107;
+        }
+        button {
+            background: #8B0000;
+            color: #FFD700;
+            border: 2px solid #CD7F32;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #660000;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: #2C2C2C;
+            border: 2px solid #CD7F32;
+            color: #f5f5f5;
+            border-radius: 5px;
+        }
+        pre {
+            background: #0d0d0d;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #CD7F32;
+        }
+    </style>
+</head>
+<body>
+    <h1>⚔️ Firebase Connection Test</h1>
+    
+    <div id="status-container"></div>
+    
+    <div>
+        <h2>Test Registration</h2>
+        <input type="email" id="test-email" placeholder="test@example.com">
+        <input type="password" id="test-password" placeholder="password123">
+        <button onclick="testRegister()">Test Register</button>
+        <button onclick="testLogin()">Test Login</button>
+        <button onclick="testLogout()">Logout</button>
+    </div>
+    
+    <div>
+        <h2>Console Log:</h2>
+        <pre id="console-log"></pre>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        const logElement = document.getElementById('console-log');
+        const statusContainer = document.getElementById('status-container');
+        
+        function log(message, type = 'info') {
+            console.log(message);
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.textContent += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        function showStatus(message, type) {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = message;
+            statusContainer.appendChild(div);
+        }
+        
+        // Test Firebase Config
+        log('Testing Firebase configuration...');
+        
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY_HERE",
+            authDomain: "your-project-id.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project-id.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        // Check if Firebase loaded
+        if (typeof firebase === 'undefined') {
+            showStatus('❌ Firebase SDK not loaded! Check internet connection.', 'error');
+            log('ERROR: Firebase SDK not loaded');
+        } else {
+            showStatus('✅ Firebase SDK loaded successfully', 'success');
+            log('Firebase SDK loaded');
+            
+            // Check config
+            if (firebaseConfig.apiKey === "YOUR_API_KEY_HERE") {
+                showStatus('⚠️ WARNING: Using placeholder config! Update firebaseConfig in this file.', 'warning');
+                log('WARNING: Placeholder config detected');
+            }
+            
+            try {
+                // Initialize Firebase
+                firebase.initializeApp(firebaseConfig);
+                showStatus('✅ Firebase initialized', 'success');
+                log('Firebase initialized successfully');
+                
+                const auth = firebase.auth();
+                const db = firebase.firestore();
+                
+                // Test auth state
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        showStatus('✅ User logged in: ' + user.email, 'success');
+                        log('User authenticated: ' + user.email);
+                    } else {
+                        log('No user logged in');
+                    }
+                });
+                
+            } catch (error) {
+                showStatus('❌ Firebase initialization failed: ' + error.message, 'error');
+                log('ERROR: ' + error.message);
+            }
+        }
+        
+        async function testRegister() {
+            const email = document.getElementById('test-email').value;
+            const password = document.getElementById('test-password').value;
+            
+            if (!email || !password) {
+                alert('Please enter email and password');
+                return;
+            }
+            
+            log('Attempting registration...');
+            try {
+                const result = await firebase.auth().createUserWithEmailAndPassword(email, password);
+                showStatus('✅ Registration successful! UID: ' + result.user.uid, 'success');
+                log('Registration successful: ' + email);
+            } catch (error) {
+                showStatus('❌ Registration failed: ' + error.message, 'error');
+                log('ERROR: ' + error.code + ' - ' + error.message);
+            }
+        }
+        
+        async function testLogin() {
+            const email = document.getElementById('test-email').value;
+            const password = document.getElementById('test-password').value;
+            
+            if (!email || !password) {
+                alert('Please enter email and password');
+                return;
+            }
+            
+            log('Attempting login...');
+            try {
+                await firebase.auth().signInWithEmailAndPassword(email, password);
+                showStatus('✅ Login successful!', 'success');
+                log('Login successful: ' + email);
+            } catch (error) {
+                showStatus('❌ Login failed: ' + error.message, 'error');
+                log('ERROR: ' + error.code + ' - ' + error.message);
+            }
+        }
+        
+        async function testLogout() {
+            try {
+                await firebase.auth().signOut();
+                showStatus('✅ Logged out', 'success');
+                log('Logged out successfully');
+            } catch (error) {
+                showStatus('❌ Logout failed: ' + error.message, 'error');
+                log('ERROR: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

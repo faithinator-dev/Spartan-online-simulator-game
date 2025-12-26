@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚔️ SPARTAN CONQUEST - Rise of Legends</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/animations.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="screen active">
+        <div class="loading-content">
+            <h1 class="spartan-title">⚔️ SPARTAN CONQUEST</h1>
+            <div class="loading-spinner"></div>
+            <p>Loading the ancient world...</p>
+        </div>
+    </div>
+
+    <!-- Login/Register Screen -->
+    <div id="auth-screen" class="screen">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1 class="spartan-title">⚔️ SPARTAN CONQUEST</h1>
+                <p class="tagline">Rise from trainee to legendary commander</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="register">Register</button>
+            </div>
+
+            <div id="login-form" class="auth-form active">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <button id="login-btn" class="btn btn-primary">Enter Battle</button>
+            </div>
+
+            <div id="register-form" class="auth-form">
+                <input type="text" id="register-username" placeholder="Warrior Name" required>
+                <input type="email" id="register-email" placeholder="Email" required>
+                <input type="password" id="register-password" placeholder="Password" required>
+                <button id="register-btn" class="btn btn-primary">Begin Training</button>
+            </div>
+
+            <div id="auth-error" class="error-message"></div>
+        </div>
+    </div>
+
+    <!-- Main Game Screen -->
+    <div id="game-screen" class="screen">
+        <!-- Top Navigation Bar -->
+        <nav class="top-nav">
+            <div class="nav-brand">
+                <span class="spartan-icon">⚔️</span>
+                <span class="game-title">SPARTAN CONQUEST</span>
+            </div>
+            <div class="nav-player-info">
+                <span id="player-name" class="player-name"></span>
+                <span id="player-gold" class="gold-display">💰 0</span>
+                <button id="logout-btn" class="btn btn-small">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Main Container -->
+        <div class="game-container">
+            <!-- Sidebar - Character Info -->
+            <aside class="sidebar">
+                <div class="character-card">
+                    <h2 id="char-name">Loading...</h2>
+                    <div class="rank-badge">
+                        <span id="char-rank">Trainee</span>
+                    </div>
+                    
+                    <div class="stat-row">
+                        <span>Level:</span>
+                        <span id="char-level">1</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Age:</span>
+                        <span id="char-age">10</span>
+                    </div>
+                    
+                    <div class="stat-bar-container">
+                        <div class="stat-label">
+                            <span>❤️ Health</span>
+                            <span id="health-text">100/100</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div id="health-bar" class="stat-fill health" style="width: 100%"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat-bar-container">
+                        <div class="stat-label">
+                            <span>⭐ Experience</span>
+                            <span id="xp-text">0/100</span>
+                        </div>
+                        <div class="stat-bar">
+                            <div id="xp-bar" class="stat-fill xp" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-icon">⚔️</span>
+                            <span class="stat-value" id="stat-strength">20</span>
+                            <span class="stat-name">Strength</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">🛡️</span>
+                            <span class="stat-value" id="stat-defense">5</span>
+                            <span class="stat-name">Defense</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">⚡</span>
+                            <span class="stat-value" id="stat-agility">10</span>
+                            <span class="stat-name">Agility</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">💪</span>
+                            <span class="stat-value" id="stat-stamina">50</span>
+                            <span class="stat-name">Stamina</span>
+                        </div>
+                    </div>
+
+                    <div class="location-info">
+                        <span class="location-icon">📍</span>
+                        <span id="char-location">Sparta</span>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <h3>Achievements</h3>
+                    <div class="achievement-item">
+                        <span>🏆</span>
+                        <span id="battles-won">0</span>
+                        <span>Battles Won</span>
+                    </div>
+                    <div class="achievement-item">
+                        <span>🏛️</span>
+                        <span id="territories-conquered">0</span>
+                        <span>Territories</span>
+                    </div>
+                    <div class="achievement-item">
+                        <span>⭐</span>
+                        <span id="reputation">0</span>
+                        <span>Reputation</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <!-- Navigation Menu -->
+                <div class="content-nav">
+                    <button class="nav-btn active" data-view="dashboard">
+                        <span>🏠</span> Dashboard
+                    </button>
+                    <button class="nav-btn" data-view="map">
+                        <span>🗺️</span> World Map
+                    </button>
+                    <button class="nav-btn" data-view="battle">
+                        <span>⚔️</span> Battle
+                    </button>
+                    <button class="nav-btn" data-view="quests">
+                        <span>📜</span> Quests
+                    </button>
+                    <button class="nav-btn" data-view="inventory">
+                        <span>🎒</span> Inventory
+                    </button>
+                    <button class="nav-btn" data-view="squad">
+                        <span>👥</span> Squad
+                    </button>
+                    <button class="nav-btn" data-view="leaderboard">
+                        <span>🏆</span> Leaderboard
+                    </button>
+                    <button class="nav-btn" data-view="skills">
+                        <span>📊</span> Skills
+                    </button>
+                </div>
+
+                <!-- Content Views -->
+                <div id="dashboard-view" class="content-view active">
+                    <h1>Welcome, Spartan Warrior!</h1>
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <h3>⚔️ Your Journey</h3>
+                            <p id="journey-text">You begin as a young trainee in the mighty city of Sparta. Train hard, fight bravely, and rise through the ranks to become a legendary commander!</p>
+                            <button class="btn btn-primary" onclick="navigateToView('quests')">Start Quest</button>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>🗺️ World Status</h3>
+                            <p>Territories under Spartan control: <strong id="spartan-territories">1</strong></p>
+                            <p>Available to conquer: <strong id="available-territories">49</strong></p>
+                            <button class="btn btn-secondary" onclick="navigateToView('map')">View Map</button>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>📈 Progress</h3>
+                            <p>Next rank: <strong id="next-rank">Young Warrior</strong></p>
+                            <p>Requirements: Level 5</p>
+                            <button class="btn btn-secondary" onclick="navigateToView('skills')">View Skills</button>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>🎯 Daily Tasks</h3>
+                            <ul id="daily-tasks">
+                                <li>✓ Login Bonus (+10 XP)</li>
+                                <li>⭕ Complete a quest (0/1)</li>
+                                <li>⭕ Win a battle (0/1)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="map-view" class="content-view">
+                    <h1>🗺️ World Map</h1>
+                    <div class="map-container">
+                        <div class="map-legend">
+                            <div class="legend-item">
+                                <span class="legend-color owned"></span>
+                                <span>Your Territories</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color enemy"></span>
+                                <span>Enemy Controlled</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color neutral"></span>
+                                <span>Neutral</span>
+                            </div>
+                        </div>
+                        <div id="map-grid" class="map-grid"></div>
+                        <div id="territory-details" class="territory-details hidden">
+                            <h3 id="territory-name">-</h3>
+                            <p><strong>Owner:</strong> <span id="territory-owner">-</span></p>
+                            <p><strong>Defense:</strong> <span id="territory-defense">-</span></p>
+                            <p><strong>Garrison:</strong> <span id="territory-garrison">-</span></p>
+                            <p><strong>Resources:</strong> <span id="territory-resources">-</span></p>
+                            <p id="territory-description">-</p>
+                            <div class="territory-actions">
+                                <button id="attack-territory-btn" class="btn btn-danger">Attack</button>
+                                <button id="defend-territory-btn" class="btn btn-primary hidden">Fortify</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="battle-view" class="content-view">
+                    <h1>⚔️ Battle Arena</h1>
+                    <div id="battle-selection" class="battle-selection">
+                        <h2>Choose Your Battle</h2>
+                        <div class="battle-options">
+                            <div class="battle-option" onclick="startTrainingBattle()">
+                                <h3>🎯 Training Grounds</h3>
+                                <p>Practice combat against training dummies</p>
+                                <p class="reward">Reward: +20 XP, +5 Combat Skill</p>
+                                <button class="btn btn-primary">Enter Training</button>
+                            </div>
+                            <div class="battle-option" onclick="startHuntingBattle()">
+                                <h3>🐗 Hunting</h3>
+                                <p>Hunt wild boars in the forest</p>
+                                <p class="reward">Reward: +40 XP, +10 Gold</p>
+                                <button class="btn btn-primary">Go Hunting</button>
+                            </div>
+                            <div class="battle-option" onclick="startRandomBattle()">
+                                <h3>⚔️ Random Encounter</h3>
+                                <p>Face a random enemy warrior</p>
+                                <p class="reward">Reward: Variable</p>
+                                <button class="btn btn-primary">Find Enemy</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="battle-arena" class="battle-arena hidden">
+                        <!-- Battle UI will be dynamically generated -->
+                    </div>
+                </div>
+
+                <div id="quests-view" class="content-view">
+                    <h1>📜 Quests</h1>
+                    <div class="quests-container">
+                        <div class="quest-tabs">
+                            <button class="quest-tab active" data-tab="available">Available</button>
+                            <button class="quest-tab" data-tab="active">Active</button>
+                            <button class="quest-tab" data-tab="completed">Completed</button>
+                        </div>
+                        <div id="quests-list" class="quests-list">
+                            <!-- Quests will be dynamically loaded -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="inventory-view" class="content-view">
+                    <h1>🎒 Inventory & Equipment</h1>
+                    <div class="inventory-container">
+                        <div class="equipment-panel">
+                            <h2>Equipped Items</h2>
+                            <div class="equipment-slots">
+                                <div class="equipment-slot" data-slot="head">
+                                    <div class="slot-icon">🪖</div>
+                                    <div class="slot-label">Head</div>
+                                    <div id="equipped-head" class="equipped-item">-</div>
+                                </div>
+                                <div class="equipment-slot" data-slot="body">
+                                    <div class="slot-icon">🛡️</div>
+                                    <div class="slot-label">Body</div>
+                                    <div id="equipped-body" class="equipped-item">-</div>
+                                </div>
+                                <div class="equipment-slot" data-slot="legs">
+                                    <div class="slot-icon">👢</div>
+                                    <div class="slot-label">Legs</div>
+                                    <div id="equipped-legs" class="equipped-item">-</div>
+                                </div>
+                                <div class="equipment-slot" data-slot="weapon">
+                                    <div class="slot-icon">⚔️</div>
+                                    <div class="slot-label">Weapon</div>
+                                    <div id="equipped-weapon" class="equipped-item">-</div>
+                                </div>
+                                <div class="equipment-slot" data-slot="shield">
+                                    <div class="slot-icon">🛡️</div>
+                                    <div class="slot-label">Shield</div>
+                                    <div id="equipped-shield" class="equipped-item">-</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="inventory-panel">
+                            <h2>Shop</h2>
+                            <div id="shop-items" class="shop-grid">
+                                <!-- Shop items will be dynamically loaded -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="squad-view" class="content-view">
+                    <h1>👥 Squad Management</h1>
+                    <div id="squad-locked" class="locked-feature">
+                        <h2>🔒 Squad System Locked</h2>
+                        <p>Reach Level 5 and achieve "Young Warrior" rank to unlock squad management!</p>
+                        <p>Current Level: <strong id="squad-lock-level">1</strong></p>
+                        <p>Required Level: <strong>5</strong></p>
+                    </div>
+                    <div id="squad-unlocked" class="squad-container hidden">
+                        <div class="squad-info">
+                            <p>Squad Size: <strong><span id="current-squad-size">0</span>/<span id="max-squad-size">3</span></strong></p>
+                            <button id="recruit-btn" class="btn btn-primary">Recruit Warriors (50 Gold)</button>
+                        </div>
+                        <div id="squad-members" class="squad-members">
+                            <!-- Squad members will be dynamically loaded -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="leaderboard-view" class="content-view">
+                    <h1>🏆 Leaderboard</h1>
+                    <div class="leaderboard-tabs">
+                        <button class="leaderboard-tab active" data-category="level">Top Warriors</button>
+                        <button class="leaderboard-tab" data-category="territories">Conquerors</button>
+                        <button class="leaderboard-tab" data-category="rating">Highest Rated</button>
+                    </div>
+                    <div id="leaderboard-list" class="leaderboard-list">
+                        <!-- Leaderboard will be dynamically loaded -->
+                    </div>
+                </div>
+
+                <div id="skills-view" class="content-view">
+                    <h1>📊 Skills & Training</h1>
+                    <div class="skills-container">
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-icon">⚔️</span>
+                                <span class="skill-name">Combat</span>
+                                <span class="skill-value" id="skill-combat">5</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div id="skill-bar-combat" class="skill-fill" style="width: 5%"></div>
+                            </div>
+                            <button class="btn btn-small" onclick="trainSkill('combat')">Train (10 Gold)</button>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-icon">🎯</span>
+                                <span class="skill-name">Tactics</span>
+                                <span class="skill-value" id="skill-tactics">0</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div id="skill-bar-tactics" class="skill-fill" style="width: 0%"></div>
+                            </div>
+                            <button class="btn btn-small" onclick="trainSkill('tactics')">Train (15 Gold)</button>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-icon">👑</span>
+                                <span class="skill-name">Leadership</span>
+                                <span class="skill-value" id="skill-leadership">0</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div id="skill-bar-leadership" class="skill-fill" style="width: 0%"></div>
+                            </div>
+                            <button class="btn btn-small" onclick="trainSkill('leadership')">Train (20 Gold)</button>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-icon">🌲</span>
+                                <span class="skill-name">Survival</span>
+                                <span class="skill-value" id="skill-survival">3</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div id="skill-bar-survival" class="skill-fill" style="width: 3%"></div>
+                            </div>
+                            <button class="btn btn-small" onclick="trainSkill('survival')">Train (10 Gold)</button>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-icon">🏹</span>
+                                <span class="skill-name">Hunting</span>
+                                <span class="skill-value" id="skill-hunting">2</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div id="skill-bar-hunting" class="skill-fill" style="width: 2%"></div>
+                            </div>
+                            <button class="btn btn-small" onclick="trainSkill('hunting')">Train (10 Gold)</button>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-icon">🥷</span>
+                                <span class="skill-name">Stealth</span>
+                                <span class="skill-value" id="skill-stealth">1</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div id="skill-bar-stealth" class="skill-fill" style="width: 1%"></div>
+                            </div>
+                            <button class="btn btn-small" onclick="trainSkill('stealth')">Train (15 Gold)</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+    <!-- Game Scripts -->
+    <script src="scripts/firebase-config.js"></script>
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/character.js"></script>
+    <script src="scripts/combat.js"></script>
+    <script src="scripts/map.js"></script>
+    <script src="scripts/inventory.js"></script>
+    <script src="scripts/quests.js"></script>
+    <script src="scripts/squad.js"></script>
+    <script src="scripts/ui.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>
