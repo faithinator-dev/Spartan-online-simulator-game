@@ -1,0 +1,825 @@
+/* Mobile Responsive Styles */
+
+/* ============================================
+   MOBILE-FIRST RESPONSIVE DESIGN
+   ============================================ */
+
+/* Prevent zoom on input focus (iOS) */
+input, select, textarea {
+    font-size: 16px !important;
+}
+
+/* Touch-friendly tap targets */
+button, a, .clickable {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Smooth scrolling for mobile */
+html {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* Prevent text selection on buttons */
+button, .btn {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* ============================================
+   TABLET (768px and below)
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+    /* Base font size adjustment */
+    body {
+        font-size: 14px;
+    }
+    
+    /* Game container full width */
+    .game-container {
+        padding: 10px;
+        max-width: 100%;
+    }
+    
+    /* Loading screen */
+    .loading-content h1,
+    .spartan-title {
+        font-size: 2rem !important;
+    }
+    
+    /* Auth container */
+    .auth-container {
+        padding: 20px;
+        margin: 10px;
+        max-width: 100%;
+    }
+    
+    .auth-tabs {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .auth-tab {
+        width: 100%;
+        padding: 12px;
+    }
+    
+    /* Game layout - Stack vertically */
+    .game-layout {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .sidebar {
+        width: 100% !important;
+        order: 1;
+        max-width: 100%;
+    }
+    
+    .main-content {
+        width: 100% !important;
+        order: 2;
+    }
+    
+    /* Character info */
+    .character-info {
+        padding: 15px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    /* Navigation buttons */
+    .nav-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .nav-btn {
+        padding: 12px 8px;
+        font-size: 13px;
+    }
+    
+    /* Content sections */
+    .content-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    /* Tables - Horizontal scroll */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        min-width: 600px;
+    }
+    
+    /* Shop items */
+    .shop-items {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 10px;
+    }
+    
+    .shop-item {
+        padding: 10px;
+    }
+    
+    /* Inventory grid */
+    .inventory-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+    }
+    
+    /* Battle options */
+    .battle-options {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .battle-option {
+        padding: 15px;
+    }
+    
+    /* Territory map */
+    .territory-map {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 8px;
+    }
+    
+    .territory-item {
+        padding: 10px;
+        font-size: 12px;
+    }
+    
+    /* Squad members */
+    .squad-members {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    /* Skills */
+    .skills-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    /* Modals */
+    .modal-content {
+        width: 95%;
+        max-width: 100%;
+        margin: 20px auto;
+        padding: 20px;
+    }
+    
+    /* Profile modal */
+    .profile-modal {
+        width: 95%;
+        max-width: 100%;
+        max-height: 90vh;
+        padding: 20px;
+    }
+    
+    .avatar-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+        max-height: 300px;
+    }
+    
+    .avatar-category-tabs {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .category-tab {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    /* Quest items */
+    .quest-list {
+        gap: 10px;
+    }
+    
+    .quest-item {
+        padding: 12px;
+    }
+    
+    /* Buttons */
+    .btn {
+        padding: 12px 20px;
+        font-size: 14px;
+        min-height: 44px;
+    }
+    
+    .btn-small {
+        padding: 8px 12px;
+        font-size: 12px;
+        min-height: 36px;
+    }
+}
+
+/* ============================================
+   MOBILE PORTRAIT (480px and below)
+   ============================================ */
+
+@media screen and (max-width: 480px) {
+    /* Further reduce font sizes */
+    body {
+        font-size: 13px;
+    }
+    
+    h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    h2 {
+        font-size: 1.3rem !important;
+    }
+    
+    h3 {
+        font-size: 1.1rem !important;
+    }
+    
+    /* Single column layouts */
+    .stats-grid,
+    .form-row {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Navigation single column */
+    .nav-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Shop items smaller */
+    .shop-items {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .shop-item {
+        padding: 8px;
+        font-size: 11px;
+    }
+    
+    /* Equipment slots stacked */
+    .equipment-slots {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    /* Territory map 2 columns */
+    .territory-map {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    /* Battle log smaller */
+    .battle-log {
+        max-height: 200px;
+        font-size: 12px;
+    }
+    
+    /* Action buttons stacked */
+    .action-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .action-buttons .btn {
+        width: 100%;
+    }
+    
+    /* Character avatar smaller */
+    .character-avatar {
+        width: 60px;
+        height: 60px;
+    }
+    
+    /* Avatar preview in profile */
+    .avatar-preview {
+        width: 60px !important;
+        height: 60px !important;
+    }
+    
+    .current-avatar {
+        width: 80px;
+        height: 80px;
+    }
+    
+    /* Profile info */
+    .current-profile {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    /* Smaller avatar grid */
+    .avatar-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-height: 250px;
+    }
+    
+    /* Leaderboard adjustments */
+    .leaderboard {
+        font-size: 12px;
+    }
+    
+    .leaderboard-entry {
+        padding: 10px;
+    }
+    
+    /* Input groups */
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    /* Padding adjustments */
+    .content-section {
+        padding: 12px;
+    }
+    
+    .sidebar {
+        padding: 12px;
+    }
+}
+
+/* ============================================
+   MOBILE LANDSCAPE OPTIMIZATIONS
+   ============================================ */
+
+@media screen and (max-width: 896px) and (orientation: landscape) {
+    /* Optimize for landscape mode */
+    .game-layout {
+        flex-direction: row;
+    }
+    
+    .sidebar {
+        width: 35% !important;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .main-content {
+        width: 65% !important;
+    }
+    
+    /* Character info compact */
+    .character-info {
+        padding: 10px;
+    }
+    
+    .character-info h2 {
+        font-size: 1.2rem !important;
+    }
+    
+    /* Smaller stats */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .stat-item {
+        padding: 8px;
+        font-size: 12px;
+    }
+    
+    /* Navigation compact */
+    .nav-buttons {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+    
+    .nav-btn {
+        padding: 8px 6px;
+        font-size: 11px;
+    }
+}
+
+/* ============================================
+   TOUCH-FRIENDLY ENHANCEMENTS
+   ============================================ */
+
+/* Larger touch targets */
+@media (hover: none) and (pointer: coarse) {
+    button,
+    .btn,
+    .nav-btn,
+    .action-btn,
+    input[type="button"],
+    input[type="submit"] {
+        min-height: 48px;
+        padding: 14px 24px;
+    }
+    
+    /* Increase spacing between interactive elements */
+    .nav-buttons,
+    .action-buttons,
+    .battle-options {
+        gap: 12px;
+    }
+    
+    /* Make links easier to tap */
+    a {
+        padding: 8px;
+        margin: -8px;
+    }
+    
+    /* Increase form input size */
+    input,
+    select,
+    textarea {
+        min-height: 48px;
+        padding: 12px;
+    }
+    
+    /* Better checkbox/radio button targets */
+    input[type="checkbox"],
+    input[type="radio"] {
+        min-width: 24px;
+        min-height: 24px;
+    }
+}
+
+/* ============================================
+   SCROLLBAR STYLES (MOBILE)
+   ============================================ */
+
+/* Thin scrollbars for mobile */
+@media screen and (max-width: 768px) {
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: rgba(255, 215, 0, 0.5);
+        border-radius: 3px;
+    }
+}
+
+/* ============================================
+   NOTIFICATION ADJUSTMENTS
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+    .notification,
+    .success-message {
+        right: 10px;
+        left: 10px;
+        top: 10px;
+        width: auto;
+        font-size: 13px;
+        padding: 12px;
+    }
+}
+
+/* ============================================
+   LOADING SCREEN MOBILE
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .loading-content h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+    
+    .loading-content p {
+        font-size: 14px;
+    }
+}
+
+/* ============================================
+   GAME SPECIFIC MOBILE OPTIMIZATIONS
+   ============================================ */
+
+/* Battle screen mobile */
+@media screen and (max-width: 768px) {
+    .battle-screen {
+        padding: 10px;
+    }
+    
+    .battle-status {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .battle-combatant {
+        width: 100%;
+        padding: 10px;
+    }
+    
+    .health-bar {
+        height: 20px;
+    }
+    
+    .battle-actions {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+}
+
+/* Map screen mobile */
+@media screen and (max-width: 768px) {
+    .map-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .map-filter {
+        width: 100%;
+    }
+}
+
+/* Squad screen mobile */
+@media screen and (max-width: 768px) {
+    .squad-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .recruit-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================
+   KEYBOARD AVOIDANCE (iOS)
+   ============================================ */
+
+/* Prevent iOS keyboard from covering inputs */
+@supports (-webkit-touch-callout: none) {
+    input:focus,
+    textarea:focus,
+    select:focus {
+        transform: translateY(-50px);
+        transition: transform 0.3s ease;
+    }
+    
+    input:not(:focus),
+    textarea:not(:focus),
+    select:not(:focus) {
+        transform: translateY(0);
+        transition: transform 0.3s ease;
+    }
+}
+
+/* ============================================
+   SAFE AREA INSETS (iPhone X+)
+   ============================================ */
+
+@supports (padding: max(0px)) {
+    .game-container,
+    .auth-container,
+    .sidebar,
+    .main-content {
+        padding-left: max(10px, env(safe-area-inset-left));
+        padding-right: max(10px, env(safe-area-inset-right));
+    }
+    
+    .game-layout {
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+    }
+}
+
+/* ============================================
+   MOBILE MENU (HAMBURGER)
+   ============================================ */
+
+.mobile-menu-toggle {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    /* Show hamburger menu on mobile */
+    .mobile-menu-toggle {
+        display: block;
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+        background: var(--gold, #FFD700);
+        border: none;
+        border-radius: 8px;
+        width: 48px;
+        height: 48px;
+        cursor: pointer;
+        font-size: 24px;
+        color: var(--dark, #1a1a2e);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Hide sidebar by default on mobile */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        height: 100vh;
+        width: 80% !important;
+        max-width: 300px;
+        z-index: 999;
+        background: var(--bg-primary, #1a1a2e);
+        transition: left 0.3s ease;
+        overflow-y: auto;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+    }
+    
+    .sidebar.mobile-open {
+        left: 0;
+    }
+    
+    /* Overlay when sidebar is open */
+    .mobile-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 998;
+    }
+    
+    .mobile-overlay.active {
+        display: block;
+    }
+    
+    /* Close button in sidebar */
+    .sidebar-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        border: 2px solid var(--gold);
+        color: var(--gold);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+
+/* Reduce animations on mobile for better performance */
+@media screen and (max-width: 768px) {
+    * {
+        animation-duration: 0.2s !important;
+        transition-duration: 0.2s !important;
+    }
+    
+    /* Disable complex animations on low-end devices */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+}
+
+/* ============================================
+   DARK MODE MOBILE
+   ============================================ */
+
+@media (prefers-color-scheme: dark) and (max-width: 768px) {
+    /* Ensure text is readable on mobile dark mode */
+    body {
+        color: #f5f5f5;
+    }
+    
+    input,
+    select,
+    textarea {
+        background: rgba(255, 255, 255, 0.15);
+        color: #f5f5f5;
+    }
+}
+
+/* ============================================
+   OFFLINE INDICATOR
+   ============================================ */
+
+.offline-indicator {
+    display: none;
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff6b6b;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    z-index: 10000;
+}
+
+.offline-indicator.show {
+    display: block;
+}
+
+/* ============================================
+   PULL TO REFRESH PREVENTION
+   ============================================ */
+
+body {
+    overscroll-behavior-y: contain;
+}
+
+/* ============================================
+   MOBILE GAME CONTROLS
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+    /* Make game controls easier to use on mobile */
+    .game-controls {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(26, 26, 46, 0.95);
+        padding: 10px;
+        display: flex;
+        gap: 10px;
+        z-index: 900;
+        border-top: 2px solid var(--gold);
+    }
+    
+    .game-controls .btn {
+        flex: 1;
+        margin: 0;
+    }
+}
+
+/* ============================================
+   TABLET SPECIFIC (iPad)
+   ============================================ */
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    .game-layout {
+        flex-direction: row;
+    }
+    
+    .sidebar {
+        width: 30% !important;
+    }
+    
+    .main-content {
+        width: 70% !important;
+    }
+    
+    /* Two column grids for medium screens */
+    .shop-items,
+    .territory-map {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ============================================
+   PRINT STYLES (for screenshots)
+   ============================================ */
+
+@media print {
+    .nav-buttons,
+    .mobile-menu-toggle,
+    button,
+    .btn {
+        display: none !important;
+    }
+    
+    .sidebar,
+    .main-content {
+        width: 100% !important;
+    }
+}

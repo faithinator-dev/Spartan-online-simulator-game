@@ -208,4 +208,114 @@ function calculatePercentage(current, max) {
     return Math.min(100, Math.max(0, (current / max) * 100));
 }
 
+// ============================================
+// MOBILE MENU FUNCTIONALITY
+// ============================================
+
+let mobileMenuOpen = false;
+
+function initializeMobileMenu() {
+    // Only initialize on mobile devices
+    if (window.innerWidth > 768) return;
+    
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    
+    // Create mobile menu toggle button
+    const menuToggle = document.createElement('button');
+    menuToggle.className = 'mobile-menu-toggle';
+    menuToggle.innerHTML = '☰';
+    menuToggle.setAttribute('aria-label', 'Toggle Menu');
+    document.body.appendChild(menuToggle);
+    
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'mobile-overlay';
+    document.body.appendChild(overlay);
+    
+    // Create close button in sidebar
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'sidebar-close';
+    closeBtn.innerHTML = '×';
+    closeBtn.setAttribute('aria-label', 'Close Menu');
+    sidebar.insertBefore(closeBtn, sidebar.firstChild);
+    
+    // Toggle menu function
+    function toggleMobileMenu() {
+        mobileMenuOpen = !mobileMenuOpen;
+        sidebar.classList.toggle('mobile-open', mobileMenuOpen);
+        overlay.classList.toggle('active', mobileMenuOpen);
+        menuToggle.innerHTML = mobileMenuOpen ? '×' : '☰';
+    }
+    
+    // Close menu function
+    function closeMobileMenu() {
+        mobileMenuOpen = false;
+        sidebar.classList.remove('mobile-open');
+        overlay.classList.remove('active');
+        menuToggle.innerHTML = '☰';
+    }
+    
+    // Event listeners
+    menuToggle.addEventListener('click', toggleMobileMenu);
+    closeBtn.addEventListener('click', closeMobileMenu);
+    overlay.addEventListener('click', closeMobileMenu);
+    
+    // Close menu when navigating
+    const navButtons = sidebar.querySelectorAll('.nav-btn');
+    navButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            setTimeout(closeMobileMenu, 300);
+        });
+    });
+    
+    // Close menu on window resize to desktop
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && mobileMenuOpen) {
+            closeMobileMenu();
+        }
+    });
+}
+
+// Detect if device is mobile
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+        || window.innerWidth <= 768;
+}
+
+// Offline detection
+function initializeOfflineDetection() {
+    const indicator = document.createElement('div');
+    indicator.className = 'offline-indicator';
+    indicator.textContent = '⚠️ No Internet Connection';
+    document.body.appendChild(indicator);
+    
+    function updateOnlineStatus() {
+        if (!navigator.onLine) {
+            indicator.classList.add('show');
+        } else {
+            indicator.classList.remove('show');
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+}
+
+// Initialize mobile features when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        if (isMobileDevice()) {
+            setTimeout(initializeMobileMenu, 1000);
+            initializeOfflineDetection();
+        }
+    });
+} else {
+    if (isMobileDevice()) {
+        setTimeout(initializeMobileMenu, 1000);
+        initializeOfflineDetection();
+    }
+}
+
 console.log("✅ Utility functions loaded");

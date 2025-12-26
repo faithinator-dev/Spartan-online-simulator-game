@@ -2,8 +2,9 @@
 
 A web-based text RPG where you rise from a young Spartan trainee to a legendary commander, conquering the ancient world!
 
-![Game Version](https://img.shields.io/badge/version-1.0.0-gold)
+![Game Version](https://img.shields.io/badge/version-2.1-gold)
 ![Firebase](https://img.shields.io/badge/Firebase-10.7.1-orange)
+![Mobile](https://img.shields.io/badge/Mobile-Optimized-green)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 ## 🎮 Game Features
@@ -48,6 +49,13 @@ A web-based text RPG where you rise from a young Spartan trainee to a legendary 
   - **Storyline Editor**: Create custom narratives and milestones
   - **Game Balance**: Adjust economy, progression, combat mechanics
   - **Player Management**: Gift items, view stats, manage users
+
+### Mobile Support 📱 NEW!
+- **Fully Responsive**: Works perfectly on phones and tablets
+- **Touch-Optimized**: Large buttons, swipe-friendly controls
+- **Mobile Menu**: Hamburger menu for easy navigation
+- **Offline Detection**: Shows when no internet connection
+- **Device-Specific**: Optimized for iOS and Android
   - **Import/Export**: Backup and restore configurations
 - **Access:** Open `admin-enhanced.html` with credentials
 
@@ -266,13 +274,28 @@ spartan-conquest/
 - [ ] Real-time PvP battles
 - [ ] Player alliances
 - [ ] Guild system
-- [ ] More territories (expand to 50+)
+- [ ] More territories (expand to 100+)
 - [ ] Advanced equipment crafting
 - [ ] Story campaigns
-- [ ] Mobile responsive design
+- [x] Mobile responsive design ✅
 - [ ] Sound effects and music
 - [ ] Battle animations
 - [ ] Achievement system
+- [ ] PWA support (install as app)
+
+## 📚 Documentation
+
+Comprehensive guides are available:
+- [PLAY_NOW.md](PLAY_NOW.md) - Quick start playing guide
+- [SETUP.md](SETUP.md) - Detailed setup instructions
+- [FIREBASE_SETUP.md](FIREBASE_SETUP.md) - Firebase configuration
+- [FIREBASE_TUTORIAL.md](FIREBASE_TUTORIAL.md) - Complete Firebase guide
+- [ENHANCED_ADMIN_GUIDE.md](ENHANCED_ADMIN_GUIDE.md) - Admin portal documentation
+- [ADMIN_QUICK_START.md](ADMIN_QUICK_START.md) - Admin 3-minute guide
+- [AVATAR_GUIDE.md](AVATAR_GUIDE.md) - Avatar system documentation
+- [MOBILE_GUIDE.md](MOBILE_GUIDE.md) - Mobile optimization guide ⭐ NEW
+- [CHANGELOG.md](CHANGELOG.md) - Version history
+- [SYSTEM_ARCHITECTURE.md](SYSTEM_ARCHITECTURE.md) - Technical architecture
 
 ## 🤝 Contributing
 

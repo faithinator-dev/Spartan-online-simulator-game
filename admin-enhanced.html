@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#8B0000">
     <title>🛡️ Admin Control Portal - Spartan Conquest</title>
     <link rel="stylesheet" href="public/styles/avatars.css">
+    <link rel="stylesheet" href="public/styles/mobile.css">
     <style>
         :root {
             --admin-gold: #FFD700;
@@ -516,19 +520,240 @@
             color: var(--admin-text);
         }
 
-        /* Responsive */
+        /* ============================================
+           RESPONSIVE MOBILE ADMIN PORTAL
+           ============================================ */
+        
+        /* Tablet & Mobile Portrait */
         @media (max-width: 768px) {
+            /* Login box */
+            .login-box {
+                width: 90%;
+                padding: 30px 20px;
+            }
+            
+            /* Header */
             .admin-header {
                 flex-direction: column;
                 gap: 15px;
+                padding: 20px 15px;
+            }
+            
+            .admin-header h1 {
+                font-size: 1.5rem;
             }
 
+            /* Tabs */
+            .admin-tabs {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .admin-tab {
+                padding: 10px 15px;
+                font-size: 13px;
+                flex: 1 1 calc(50% - 4px);
+                min-width: 140px;
+            }
+
+            /* Container */
+            .admin-container {
+                padding: 15px;
+            }
+            
+            .tab-content {
+                padding: 15px;
+            }
+            
+            /* Form rows */
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            /* Stats grid */
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            
+            /* Players table - Horizontal scroll */
+            .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .players-table {
+                min-width: 800px;
+            }
+            
+            /* Settings grid */
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            /* Color pickers stack */
+            .color-picker-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            /* Milestone items */
+            .milestone-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .milestone-actions {
+                width: 100%;
+                display: flex;
+                gap: 8px;
+            }
+            
+            .milestone-actions button {
+                flex: 1;
+            }
+            
+            /* Buttons */
+            .btn, .action-btn {
+                padding: 12px 16px;
+                min-height: 44px;
+                font-size: 14px;
+            }
+            
+            /* Modal */
+            .modal-content {
+                width: 95%;
+                padding: 20px 15px;
+                margin: 20px auto;
+            }
+            
+            /* Input fields */
+            input, select, textarea {
+                font-size: 16px !important; /* Prevent iOS zoom */
+                padding: 12px;
+                min-height: 44px;
+            }
+            
+            /* Section headers */
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            h3 {
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* Mobile Portrait (Small phones) */
+        @media (max-width: 480px) {
+            /* Login */
+            .login-box {
+                padding: 20px 15px;
+            }
+            
+            .login-box h2 {
+                font-size: 1.3rem;
+            }
+            
+            /* Header */
+            .admin-header h1 {
+                font-size: 1.2rem;
+            }
+            
+            /* Tabs - Single column */
             .admin-tabs {
                 flex-direction: column;
             }
-
-            .form-row {
+            
+            .admin-tab {
+                flex: 1 1 100%;
+                width: 100%;
+            }
+            
+            /* Stats single column */
+            .stats-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            /* Smaller text */
+            body {
+                font-size: 14px;
+            }
+            
+            h2 {
+                font-size: 1.2rem;
+            }
+            
+            h3 {
+                font-size: 1rem;
+            }
+            
+            /* Actions stack */
+            .section-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .section-actions button {
+                width: 100%;
+            }
+        }
+        
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            /* Larger tap targets */
+            button, .btn, .admin-tab, .action-btn {
+                min-height: 48px;
+                padding: 14px 20px;
+            }
+            
+            /* More spacing */
+            .admin-tabs {
+                gap: 12px;
+            }
+            
+            .form-row {
+                gap: 20px;
+            }
+            
+            /* Easier to tap inputs */
+            input, select, textarea {
+                min-height: 48px;
+                padding: 14px;
+            }
+            
+            /* Better checkbox targets */
+            input[type="checkbox"] {
+                min-width: 24px;
+                min-height: 24px;
+            }
+        }
+        
+        /* Mobile Landscape */
+        @media screen and (max-width: 896px) and (orientation: landscape) {
+            .admin-header {
+                padding: 15px;
+            }
+            
+            .admin-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .admin-tabs {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .admin-tab {
+                flex: 1 1 calc(33.333% - 8px);
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
     </style>
