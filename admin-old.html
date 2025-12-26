@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Spartan Conquest</title>
+    <link rel="stylesheet" href="public/styles/avatars.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #8B0000 100%);
+            color: #f5f5dc;
+            min-height: 100vh;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .admin-header {
+            text-align: center;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .admin-header h1 {
+            color: #FFD700;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .logout-btn {
+            background: #8B0000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .logout-btn:hover {
+            background: #a00000;
+        }
+
+        /* Login Screen */
+        #admin-login {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-box {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            border-radius: 10px;
+            border: 2px solid #FFD700;
+            width: 400px;
+        }
+
+        .login-box h2 {
+            color: #FFD700;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #f5f5dc;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #FFD700;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 5px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #FFD700;
+            color: #1a1a2e;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .login-btn:hover {
+            background: #FFA500;
+        }
+
+        .error-message {
+            color: #ff4444;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Dashboard */
+        #admin-dashboard {
+            display: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #FFD700;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .players-section {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #FFD700;
+        }
+
+        .players-section h2 {
+            color: #FFD700;
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #FFD700;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 5px;
+        }
+
+        .players-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .players-table th {
+            background: rgba(139, 0, 0, 0.8);
+            color: #FFD700;
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #FFD700;
+        }
+
+        .players-table td {
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            padding: 10px;
+            border: 1px solid #555;
+        }
+
+        .players-table tr:hover td {
+            background: rgba(139, 0, 0, 0.3);
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            margin: 2px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-gift {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-gift:hover {
+            background: #45a049;
+        }
+
+        .btn-view {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #0b7dda;
+        }
+
+        .btn-ban {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-ban:hover {
+            background: #da190b;
+        }
+
+        /* Gift Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1a1a2e;
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid #FFD700;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-content h3 {
+            color: #FFD700;
+            margin-bottom: 20px;
+        }
+
+        .gift-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .gift-item {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #FFD700;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .gift-item:hover {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .gift-item.selected {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #FFA500;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-confirm {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-cancel {
+            background: #666;
+            color: white;
+        }
+
+        .loading {
+            text-align: center;
+            color: #FFD700;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="admin-login">
+        <div class="login-box">
+            <h2>🛡️ Admin Panel Login</h2>
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="admin-username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="admin-password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="login-btn">Login to Admin Panel</button>
+                <div id="login-error" class="error-message"></div>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 12px; color: #999;">
+                Default: admin / admin123
+            </p>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="admin-dashboard">
+        <div class="admin-container">
+            <div class="admin-header">
+                <h1>⚔️ Spartan Conquest - Admin Panel</h1>
+                <p>Manage players and game resources</p>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Players</h3>
+                    <div class="number" id="total-players">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Online Now</h3>
+                    <div class="number" id="online-players">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Territories</h3>
+                    <div class="number" id="total-territories">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Battles Today</h3>
+                    <div class="number" id="battles-today">0</div>
+                </div>
+            </div>
+
+            <!-- Players List -->
+            <div class="players-section">
+                <h2>👥 All Players</h2>
+                <div class="search-bar">
+                    <input type="text" id="search-players" placeholder="🔍 Search by username or email...">
+                </div>
+                
+                <div id="loading" class="loading" style="display: none;">
+                    Loading players...
+                </div>
+
+                <table class="players-table" id="players-table">
+                    <thead>
+                        <tr>
+                            <th>Avatar</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Level</th>
+                            <th>Rank</th>
+                            <th>Gold</th>
+                            <th>Last Seen</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="players-tbody">
+                        <!-- Players will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gift Modal -->
+    <div id="gift-modal" class="modal">
+        <div class="modal-content">
+            <h3>🎁 Gift Items to <span id="gift-player-name"></span></h3>
+            
+            <div class="form-group">
+                <label>Gift Type</label>
+                <select id="gift-type" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid #FFD700; border-radius: 5px;">
+                    <option value="gold">Gold</option>
+                    <option value="xp">Experience Points</option>
+                    <option value="equipment">Equipment</option>
+                </select>
+            </div>
+
+            <div id="gold-section" class="form-group">
+                <label>Amount of Gold</label>
+                <input type="number" id="gift-gold-amount" min="1" max="10000" value="100" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid #FFD700; border-radius: 5px;">
+            </div>
+
+            <div id="xp-section" class="form-group" style="display: none;">
+                <label>Amount of XP</label>
+                <input type="number" id="gift-xp-amount" min="1" max="10000" value="500" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid #FFD700; border-radius: 5px;">
+            </div>
+
+            <div id="equipment-section" style="display: none;">
+                <label>Select Equipment</label>
+                <div class="gift-options" id="equipment-options">
+                    <!-- Equipment options will be loaded here -->
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-confirm" onclick="confirmGift()">Send Gift</button>
+                <button class="btn-cancel" onclick="closeGiftModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+    <!-- Admin Scripts -->
+    <script src="public/scripts/firebase-config.js"></script>
+    <script src="public/scripts/equipment-database.js"></script>
+    <script src="public/scripts/avatars.js"></script>
+    <script src="admin-panel.js"></script>
+</body>
+</html>

@@ -13,6 +13,10 @@ A web-based text RPG where you rise from a young Spartan trainee to a legendary 
 - **Progressive Ranks**: Rise from Trainee → Young Warrior → Hoplite → Squad Leader → Commander → General → War Master → Legendary Spartan
 - **6 Trainable Skills**: Combat, Tactics, Leadership, Survival, Hunting, Stealth
 - **Equipment System**: Head, Body, Legs, Weapon, Shield slots with various tiers
+- **Profile Customization**: Choose from 20+ unique warrior avatars
+  - Spartan Warriors, Greek Heroes, Legendary Figures
+  - Female Warriors, Special Classes, Mythical Champions
+  - Edit your profile anytime with ✏️ Edit Profile button
 
 ### Combat & Battles
 - **Turn-based Combat**: Strategic solo battles against various enemies
@@ -36,6 +40,16 @@ A web-based text RPG where you rise from a young Spartan trainee to a legendary 
 - **Leaderboards**: Compete for top rankings
 - **Multiple Categories**: Level, Territories, Reputation
 - **Player Ratings**: Rate and comment on other players (coming soon)
+
+### Admin Features ⭐ NEW!
+- **Enhanced Control Portal**: Complete game customization without coding
+  - **Visual Theme Editor**: Change colors, backgrounds, branding
+  - **Content Manager**: Edit all game text and messages
+  - **Storyline Editor**: Create custom narratives and milestones
+  - **Game Balance**: Adjust economy, progression, combat mechanics
+  - **Player Management**: Gift items, view stats, manage users
+  - **Import/Export**: Backup and restore configurations
+- **Access:** Open `admin-enhanced.html` with credentials
 
 ## 🚀 Getting Started
 
@@ -271,7 +285,22 @@ This is a personal project, but suggestions are welcome! Feel free to:
 
 This project is licensed under the MIT License - feel free to use and modify for your own projects!
 
-## 🙏 Credits
+## � Documentation
+
+Comprehensive guides are available:
+- **[ADMIN_QUICK_START.md](ADMIN_QUICK_START.md)** - 3-minute admin setup ⭐ NEW!
+- **[ENHANCED_ADMIN_GUIDE.md](ENHANCED_ADMIN_GUIDE.md)** - Complete admin portal guide ⭐ NEW!
+- **[ADMIN_PORTAL_SUMMARY.md](ADMIN_PORTAL_SUMMARY.md)** - Admin system overview ⭐ NEW!
+- **[ADMIN_GUIDE.md](ADMIN_GUIDE.md)** - Basic admin panel documentation
+- **[AVATAR_GUIDE.md](AVATAR_GUIDE.md)** - Avatar customization system
+- **[AVATAR_VISUAL_GUIDE.md](AVATAR_VISUAL_GUIDE.md)** - Avatar visual reference
+- **[EQUIPMENT_IMAGES_GUIDE.md](EQUIPMENT_IMAGES_GUIDE.md)** - Equipment system guide
+- **[SETUP.md](SETUP.md)** - Complete setup instructions
+- **[FIREBASE_SETUP.md](FIREBASE_SETUP.md)** - Firebase configuration guide
+- **[FIREBASE_TUTORIAL.md](FIREBASE_TUTORIAL.md)** - Firebase usage tutorial
+- **[PLAY_NOW.md](PLAY_NOW.md)** - Quick start guide
+
+## �🙏 Credits
 
 - **Developer**: Your Name
 - **Inspired by**: Ancient Spartan history and warrior culture

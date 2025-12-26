@@ -1,8 +1,55 @@
 // Main Application Entry Point
 
+// Load and apply admin settings
+let gameSettings = null;
+
+async function initializeGameSettings() {
+    try {
+        if (typeof loadGameSettings === 'function') {
+            gameSettings = await loadGameSettings();
+            console.log('✅ Game settings loaded:', gameSettings);
+            
+            // Apply theme if available
+            if (gameSettings.theme && typeof applyTheme === 'function') {
+                applyTheme(gameSettings.theme);
+            }
+            
+            // Update content if available
+            if (gameSettings.content) {
+                updateGameContent(gameSettings.content);
+            }
+        }
+    } catch (error) {
+        console.log('⚠️ Using default settings');
+    }
+}
+
+function updateGameContent(content) {
+    // Update game title
+    const titleElements = document.querySelectorAll('.spartan-title');
+    titleElements.forEach(el => {
+        if (content.gameTitle) el.textContent = content.gameTitle;
+    });
+    
+    // Update subtitle/tagline
+    const taglines = document.querySelectorAll('.tagline');
+    taglines.forEach(el => {
+        if (content.welcomeMessage) el.textContent = content.welcomeMessage;
+    });
+    
+    // Update loading text
+    const loadingText = document.querySelector('#loading-screen p');
+    if (loadingText && content.loadingText) {
+        loadingText.textContent = content.loadingText;
+    }
+}
+
 // Wait for DOM to be ready
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     console.log('🎮 Spartan Conquest - Initializing...');
+    
+    // Load admin settings first
+    await initializeGameSettings();
     
     // Show loading screen initially
     const loadingScreen = document.getElementById('loading-screen');

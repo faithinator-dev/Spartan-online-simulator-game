@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatar System Test</title>
+    <link rel="stylesheet" href="public/styles/avatars.css">
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #f5f5dc;
+            padding: 40px;
+            margin: 0;
+        }
+        
+        :root {
+            --gold: #FFD700;
+            --text-primary: #f5f5dc;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            border: 3px solid var(--gold);
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--gold);
+            margin-bottom: 30px;
+        }
+        
+        .category-section {
+            margin-bottom: 40px;
+        }
+        
+        .category-section h2 {
+            color: var(--gold);
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .avatar-test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+        }
+        
+        .avatar-test-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .avatar-test-item:hover {
+            border-color: var(--gold);
+            transform: scale(1.05);
+        }
+        
+        .test-button {
+            display: block;
+            margin: 30px auto;
+            padding: 15px 40px;
+            background: var(--gold);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>⚔️ Avatar System Test - All 20 Avatars ⚔️</h1>
+        
+        <button class="test-button" onclick="testProfileEditor()">
+            🎭 Test Profile Editor Modal
+        </button>
+        
+        <!-- Spartan Warriors -->
+        <div class="category-section">
+            <h2>🛡️ Spartan Warriors</h2>
+            <div class="avatar-test-grid" id="spartan-grid"></div>
+        </div>
+        
+        <!-- Greek Warriors -->
+        <div class="category-section">
+            <h2>🏛️ Greek Warriors</h2>
+            <div class="avatar-test-grid" id="greek-grid"></div>
+        </div>
+        
+        <!-- Legendary Heroes -->
+        <div class="category-section">
+            <h2>⭐ Legendary Heroes</h2>
+            <div class="avatar-test-grid" id="legendary-grid"></div>
+        </div>
+        
+        <!-- Female Warriors -->
+        <div class="category-section">
+            <h2>👸 Female Warriors</h2>
+            <div class="avatar-test-grid" id="female-grid"></div>
+        </div>
+        
+        <!-- Special Classes -->
+        <div class="category-section">
+            <h2>⚡ Special Classes</h2>
+            <div class="avatar-test-grid" id="special-grid"></div>
+        </div>
+        
+        <!-- Mythical -->
+        <div class="category-section">
+            <h2>🌟 Mythical (Animated Glow)</h2>
+            <div class="avatar-test-grid" id="mythical-grid"></div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="public/scripts/avatars.js"></script>
+    <script>
+        // Mock character for testing
+        const playerCharacter = {
+            name: 'Test Warrior',
+            level: 10,
+            xp: 500,
+            gold: 1000,
+            avatar: 'spartan_warrior'
+        };
+        
+        const DEFAULT_AVATAR = 'spartan_warrior';
+        
+        // Mock save function
+        function saveCharacter() {
+            console.log('✅ Character saved (mock)');
+        }
+        
+        // Load all avatars into test grids
+        function loadTestAvatars() {
+            const categories = {
+                'Spartan': 'spartan-grid',
+                'Greek': 'greek-grid',
+                'Legendary': 'legendary-grid',
+                'Female': 'female-grid',
+                'Special': 'special-grid',
+                'Mythical': 'mythical-grid'
+            };
+            
+            Object.entries(categories).forEach(([category, gridId]) => {
+                const avatars = getAvatarsByCategory(category);
+                const grid = document.getElementById(gridId);
+                
+                avatars.forEach(avatar => {
+                    const item = document.createElement('div');
+                    item.className = 'avatar-test-item';
+                    item.innerHTML = `
+                        <div class="avatar-container">
+                            <div class="avatar-preview ${avatar.cssClass}"></div>
+                        </div>
+                        <div class="avatar-option-name" style="margin-top: 10px; text-align: center; font-weight: bold;">
+                            ${avatar.name}
+                        </div>
+                        <div class="avatar-option-desc" style="margin-top: 5px; text-align: center; font-size: 11px; color: #999;">
+                            ${avatar.description}
+                        </div>
+                    `;
+                    grid.appendChild(item);
+                });
+            });
+        }
+        
+        // Test profile editor modal
+        function testProfileEditor() {
+            // Create modal overlay
+            const overlay = document.createElement('div');
+            overlay.id = 'profile-overlay';
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 9999;
+            `;
+            
+            // Create modal
+            const modal = document.createElement('div');
+            modal.className = 'profile-modal';
+            modal.innerHTML = `
+                <h2>⚔️ Edit Your Profile ⚔️</h2>
+                
+                <div class="profile-section">
+                    <h3>Current Profile</h3>
+                    <div class="current-profile">
+                        <div class="current-avatar">
+                            <div class="avatar-preview ${getAvatarById(playerCharacter.avatar).cssClass}"></div>
+                        </div>
+                        <div class="profile-info">
+                            <h4>${playerCharacter.name}</h4>
+                            <p>Level ${playerCharacter.level} Warrior</p>
+                            <p>XP: ${playerCharacter.xp}</p>
+                            <p>Gold: ${playerCharacter.gold}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <h3>Choose Your Avatar</h3>
+                    <div class="avatar-category-tabs" id="category-tabs"></div>
+                    <div class="avatar-grid" id="avatar-grid"></div>
+                </div>
+                
+                <div class="profile-buttons">
+                    <button class="profile-btn" onclick="closeModal()">Cancel</button>
+                    <button class="profile-btn primary" onclick="alert('Avatar saved! (Test mode)')">Save Changes</button>
+                </div>
+            `;
+            
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+            
+            // Load categories and avatars
+            loadModalCategories();
+            loadModalAvatars('Spartan');
+            
+            // Close on overlay click
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    closeModal();
+                }
+            });
+        }
+        
+        function loadModalCategories() {
+            const tabsContainer = document.getElementById('category-tabs');
+            const categories = getAvatarCategories();
+            
+            categories.forEach((category, index) => {
+                const tab = document.createElement('div');
+                tab.className = `category-tab ${index === 0 ? 'active' : ''}`;
+                tab.textContent = category;
+                tab.onclick = () => {
+                    document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    loadModalAvatars(category);
+                };
+                tabsContainer.appendChild(tab);
+            });
+        }
+        
+        function loadModalAvatars(category) {
+            const grid = document.getElementById('avatar-grid');
+            const avatars = getAvatarsByCategory(category);
+            
+            grid.innerHTML = '';
+            
+            avatars.forEach(avatar => {
+                const option = document.createElement('div');
+                option.className = 'avatar-option';
+                option.innerHTML = `
+                    <div class="avatar-preview ${avatar.cssClass}"></div>
+                    <div class="avatar-option-name">${avatar.name}</div>
+                    <div class="avatar-option-desc">${avatar.description}</div>
+                `;
+                
+                option.onclick = () => {
+                    document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    
+                    const currentAvatar = document.querySelector('.current-avatar .avatar-preview');
+                    if (currentAvatar) {
+                        currentAvatar.className = `avatar-preview ${avatar.cssClass}`;
+                    }
+                };
+                
+                grid.appendChild(option);
+            });
+        }
+        
+        function closeModal() {
+            const overlay = document.getElementById('profile-overlay');
+            if (overlay) {
+                overlay.remove();
+            }
+        }
+        
+        // Load on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('🎭 Loading avatar test page...');
+            loadTestAvatars();
+            console.log('✅ All avatars loaded successfully!');
+        });
+    </script>
+</body>
+</html>

@@ -545,3 +545,27 @@
 .leaderboard-entry:nth-child(n+2) {
     animation-delay: calc(0.1s * (var(--index, 1)));
 }
+
+/* Notification Slide Animations */
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
