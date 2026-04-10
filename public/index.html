@@ -166,6 +166,9 @@
                     <button class="nav-btn active" data-view="dashboard">
                         <span>🏠</span> Dashboard
                     </button>
+                    <button class="nav-btn" data-view="city">
+                        <span>🏛️</span> City of Sparta
+                    </button>
                     <button class="nav-btn" data-view="map">
                         <span>🗺️</span> World Map
                     </button>
@@ -218,6 +221,43 @@
                                 <li>⭕ Win a battle (0/1)</li>
                             </ul>
                         </div>
+                    </div>
+                </div>
+
+                <div id="city-view" class="content-view">
+                    <h1>🏛️ The City of Sparta</h1>
+                    <p class="view-description">The heart of the Spartan military machine. Here you can train, trade, and prepare for war.</p>
+                    
+                    <div class="city-grid">
+                        <div class="city-location" onclick="navigateToLocation('barracks')">
+                            <div class="location-icon">⚔️</div>
+                            <h3>The Barracks</h3>
+                            <p>Train with seasoned veterans to improve your combat skills.</p>
+                            <button class="btn btn-small">Enter</button>
+                        </div>
+                        <div class="city-location" onclick="navigateToLocation('garden')">
+                            <div class="location-icon">🌿</div>
+                            <h3>The Great Garden</h3>
+                            <p>A place of meditation and survival training. Improve your survival and hunting skills.</p>
+                            <button class="btn btn-small">Enter</button>
+                        </div>
+                        <div class="city-location" onclick="navigateToLocation('market')">
+                            <div class="location-icon">💰</div>
+                            <h3>Marketplace</h3>
+                            <p>Trade your spoils of war for better equipment and supplies.</p>
+                            <button class="btn btn-small">Enter</button>
+                        </div>
+                        <div class="city-location" onclick="navigateToLocation('agora')">
+                            <div class="location-icon">🏛️</div>
+                            <h3>The Agora</h3>
+                            <p>Listen to the elders and improve your leadership and tactics.</p>
+                            <button class="btn btn-small">Enter</button>
+                        </div>
+                    </div>
+
+                    <div id="location-detail" class="location-detail hidden">
+                        <button class="btn btn-small btn-secondary" onclick="backToCity()">← Back to City</button>
+                        <div id="location-content"></div>
                     </div>
                 </div>
 
@@ -459,7 +499,7 @@
     <script src="scripts/firebase-config.js"></script>
     <script src="scripts/equipment-database.js"></script>
     <script src="scripts/avatars.js"></script>
-    <script src="../admin-settings.js"></script>
+    <script src="scripts/admin-settings.js"></script>
     <script src="scripts/utils.js"></script>
     <script src="scripts/character.js"></script>
     <script src="scripts/combat.js"></script>

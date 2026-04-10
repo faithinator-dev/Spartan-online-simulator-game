@@ -124,13 +124,13 @@ async function loadPlayersFromFirebase() {
         const data = doc.data();
         allPlayers.push({
             uid: doc.id,
-            username: data.username || data.displayName || 'Unknown',
+            username: data.username || 'Unknown',
             email: data.email || 'N/A',
-            level: data.character?.level || 1,
-            rank: data.character?.rank || 'Trainee',
-            gold: data.character?.gold || 0,
-            avatar: data.character?.avatar || 'spartan_warrior',
-            lastLogin: data.lastLogin || new Date()
+            level: data.level || 1,
+            rank: data.rank || 'Trainee',
+            gold: data.gold || 0,
+            avatar: data.avatar || 'spartan_warrior',
+            lastLogin: data.lastActive || data.lastLogin || new Date()
         });
     });
 }
@@ -147,11 +147,11 @@ function loadDemoPlayers() {
                     uid: key,
                     username: data.username || 'Demo Player',
                     email: data.email || 'demo@example.com',
-                    level: data.character?.level || 1,
-                    rank: data.character?.rank || 'Trainee',
-                    gold: data.character?.gold || 0,
-                    avatar: data.character?.avatar || 'spartan_warrior',
-                    lastLogin: data.lastLogin || new Date()
+                    level: data.level || 1,
+                    rank: data.rank || 'Trainee',
+                    gold: data.gold || 0,
+                    avatar: data.avatar || 'spartan_warrior',
+                    lastLogin: data.lastActive || data.lastLogin || new Date()
                 });
             } catch (error) {
                 console.error('Error parsing player data:', error);
@@ -556,7 +556,7 @@ function showSuccess(message) {
 }
 
 function previewGame() {
-    window.open('public/index.html', '_blank');
+    window.open('../index.html', '_blank');
 }
 
 function exportSettings() {
@@ -670,25 +670,84 @@ async function sendGift() {
         }
         
         closeGiftModal();
+        loadPlayers(); // Refresh list
     } catch (error) {
         alert('❌ Error sending gift: ' + error.message);
     }
 }
 
 async function giftGold(playerId, amount) {
-    // Implementation from original admin-panel.js
-    console.log(`Gifting ${amount} gold to ${playerId}`);
-    // Add actual Firebase/localStorage logic here
+    if (typeof firebase !== 'undefined' && firebase.apps.length > 0 && !DEMO_MODE) {
+        const db = firebase.firestore();
+        const docRef = db.collection('users').doc(playerId);
+        const doc = await docRef.get();
+        if (doc.exists) {
+            const data = doc.data();
+            const currentGold = data.gold || 0;
+            await docRef.update({ gold: currentGold + amount });
+        }
+    } else {
+        const key = playerId.startsWith('demo_') ? playerId : `demo_users_${playerId}`;
+        const data = JSON.parse(localStorage.getItem(key));
+        if (data) {
+            data.gold = (data.gold || 0) + amount;
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+    }
 }
 
 async function giftXP(playerId, amount) {
-    console.log(`Gifting ${amount} XP to ${playerId}`);
-    // Add actual Firebase/localStorage logic here
+    if (typeof firebase !== 'undefined' && firebase.apps.length > 0 && !DEMO_MODE) {
+        const db = firebase.firestore();
+        const docRef = db.collection('users').doc(playerId);
+        const doc = await docRef.get();
+        if (doc.exists) {
+            const data = doc.data();
+            const currentXP = data.experience || 0;
+            await docRef.update({ experience: currentXP + amount });
+        }
+    } else {
+        const key = playerId.startsWith('demo_') ? playerId : `demo_users_${playerId}`;
+        const data = JSON.parse(localStorage.getItem(key));
+        if (data) {
+            data.experience = (data.experience || 0) + amount;
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+    }
 }
 
 async function giftEquipment(playerId, itemId) {
-    console.log(`Gifting equipment ${itemId} to ${playerId}`);
-    // Add actual Firebase/localStorage logic here
+    // Find item in database
+    let foundItem = null;
+    for (const category in EQUIPMENT_DATABASE) {
+        const item = EQUIPMENT_DATABASE[category].find(i => i.id === itemId);
+        if (item) {
+            foundItem = item;
+            break;
+        }
+    }
+    
+    if (!foundItem) throw new Error('Item not found in database');
+
+    if (typeof firebase !== 'undefined' && firebase.apps.length > 0 && !DEMO_MODE) {
+        const db = firebase.firestore();
+        const docRef = db.collection('users').doc(playerId);
+        const doc = await docRef.get();
+        if (doc.exists) {
+            const data = doc.data();
+            const inventory = data.inventory || [];
+            inventory.push(foundItem);
+            await docRef.update({ inventory: inventory });
+        }
+    } else {
+        const key = playerId.startsWith('demo_') ? playerId : `demo_users_${playerId}`;
+        const data = JSON.parse(localStorage.getItem(key));
+        if (data) {
+            if (!data.inventory) data.inventory = [];
+            data.inventory.push(foundItem);
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+    }
 }
 
 function viewPlayer(playerId) {

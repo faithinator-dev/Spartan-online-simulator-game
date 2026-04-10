@@ -569,3 +569,55 @@
     }
 }
 
+/* Combat Feedback Animations */
+@keyframes hit-shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+.hit-shake {
+    animation: hit-shake 0.2s ease-in-out;
+}
+
+@keyframes crit-flash {
+    0% { background-color: rgba(255, 255, 255, 0); }
+    50% { background-color: rgba(255, 255, 255, 0.5); }
+    100% { background-color: rgba(255, 255, 255, 0); }
+}
+
+.crit-flash {
+    animation: crit-flash 0.3s ease-in-out;
+}
+
+@keyframes heal-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+}
+
+.heal-pulse {
+    animation: heal-pulse 0.6s ease-out;
+}
+
+.battle-log-entry.critical {
+    color: var(--gold);
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+.battle-log-entry.player-action {
+    color: var(--text-light);
+    border-left: 3px solid var(--gold);
+    padding-left: 8px;
+}
+
+.battle-log-entry.enemy-action {
+    color: var(--text-gray);
+    border-left: 3px solid var(--danger);
+    padding-left: 8px;
+}
+

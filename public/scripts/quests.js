@@ -1,123 +1,93 @@
 // Quest System
 
 const QUESTS = {
-    training_basics: {
-        id: 'training_basics',
-        title: '🎯 Morning Training',
-        description: 'Complete your daily combat training in the training grounds.',
+    agoge_start: {
+        id: 'agoge_start',
+        title: '🛡️ The Agoge Begins',
+        description: 'Every Spartan must endure the Agoge. Report to the Barracks and complete your first combat drill to prove you are not just another mouth to feed.',
         difficulty: 'easy',
-        requirements: {
-            level: 1
+        requirements: { level: 1 },
+        objectives: {
+            type: 'train_location',
+            target: 'barracks',
+            count: 1
         },
+        rewards: {
+            xp: 60,
+            gold: 15,
+            skills: { combat: 3 }
+        },
+        repeatable: false
+    },
+    garden_survival: {
+        id: 'garden_survival',
+        title: '🌿 Lessons of the Earth',
+        description: 'A warrior who cannot survive in the wild is useless to the King. Go to the Great Garden and train your survival instincts among the thorns.',
+        difficulty: 'easy',
+        requirements: { level: 1 },
+        objectives: {
+            type: 'train_location',
+            target: 'garden',
+            count: 1
+        },
+        rewards: {
+            xp: 60,
+            gold: 10,
+            skills: { survival: 5 }
+        },
+        repeatable: false
+    },
+    blood_and_dust: {
+        id: 'blood_and_dust',
+        title: '⚔️ Blood and Dust',
+        description: 'The training dummies do not bleed, but they still teach. Defeat three opponents in the Training Grounds to show your progress.',
+        difficulty: 'easy',
+        requirements: { level: 2 },
         objectives: {
             type: 'win_battles',
             target: 'training_dummy',
             count: 3
         },
         rewards: {
-            xp: 50,
-            gold: 20,
-            skills: { combat: 5 }
+            xp: 120,
+            gold: 40,
+            skills: { combat: 8 }
         },
         repeatable: true
     },
-    first_hunt: {
-        id: 'first_hunt',
-        title: '🐗 Hunt the Wild Boar',
-        description: 'Prove your hunting skills by bringing down a wild boar.',
-        difficulty: 'easy',
-        requirements: {
-            level: 3,
-            skills: { hunting: 5 }
-        },
+    mountain_boar: {
+        id: 'mountain_boar',
+        title: '🐗 The Mountain Terror',
+        description: 'A massive boar has been sighted near the northern passes. Its tusks are like spear-points. Bring its head back to the barracks.',
+        difficulty: 'medium',
+        requirements: { level: 4, skills: { hunting: 8 } },
         objectives: {
             type: 'win_battles',
             target: 'boar',
             count: 1
         },
         rewards: {
-            xp: 100,
-            gold: 50,
-            skills: { hunting: 10 }
-        },
-        repeatable: true
-    },
-    bandit_trouble: {
-        id: 'bandit_trouble',
-        title: '⚔️ Bandit Problem',
-        description: 'Bandits are terrorizing nearby villages. Defeat them!',
-        difficulty: 'medium',
-        requirements: {
-            level: 5
-        },
-        objectives: {
-            type: 'win_battles',
-            target: 'bandit',
-            count: 5
-        },
-        rewards: {
-            xp: 200,
-            gold: 150,
-            skills: { combat: 10 },
-            reputation: 50
+            xp: 250,
+            gold: 100,
+            skills: { hunting: 12, survival: 5 }
         },
         repeatable: false
     },
-    reach_level_10: {
-        id: 'reach_level_10',
-        title: '⭐ Rise in the Ranks',
-        description: 'Train hard and reach level 10 to become a true Hoplite.',
+    spartan_leadership: {
+        id: 'spartan_leadership',
+        title: '👑 Voice of Command',
+        description: 'A Spartan does not just fight; he leads. Study the elders in the Agora until you understand the weight of the crown.',
         difficulty: 'medium',
-        requirements: {
-            level: 1
-        },
+        requirements: { level: 8 },
         objectives: {
-            type: 'reach_level',
-            level: 10
-        },
-        rewards: {
-            xp: 500,
-            gold: 300,
-            reputation: 100
-        },
-        repeatable: false
-    },
-    form_squad: {
-        id: 'form_squad',
-        title: '👥 Build Your Squad',
-        description: 'Recruit your first squad members and become a leader.',
-        difficulty: 'medium',
-        requirements: {
-            level: 5
-        },
-        objectives: {
-            type: 'recruit_squad',
+            type: 'train_location',
+            target: 'agora',
             count: 3
         },
         rewards: {
-            xp: 300,
-            gold: 200,
-            skills: { leadership: 15 }
-        },
-        repeatable: false
-    },
-    first_conquest: {
-        id: 'first_conquest',
-        title: '🏛️ First Conquest',
-        description: 'Conquer your first territory and expand Spartan influence.',
-        difficulty: 'hard',
-        requirements: {
-            level: 15
-        },
-        objectives: {
-            type: 'conquer_territory',
-            count: 1
-        },
-        rewards: {
-            xp: 1000,
-            gold: 500,
-            skills: { tactics: 20, leadership: 15 },
-            reputation: 200
+            xp: 400,
+            gold: 50,
+            skills: { leadership: 20, tactics: 10 }
         },
         repeatable: false
     }
@@ -284,6 +254,9 @@ function getQuestProgress(quest) {
         case 'conquer_territory':
             total = quest.objectives.count;
             break;
+        case 'train_location':
+            total = quest.objectives.count;
+            break;
     }
     
     return {
@@ -306,12 +279,17 @@ function updateQuestProgress(type, value) {
                 quest.progress = playerCharacter.squadSize;
             } else if (type === 'conquer_territory') {
                 quest.progress = playerCharacter.territoriesConquered;
+            } else if (type === 'train_location') {
+                if (quest.objectives.target === value) {
+                    quest.progress = (quest.progress || 0) + 1;
+                }
             }
             
             // Check if quest completed
             const progress = getQuestProgress(quest);
             if (progress.current >= progress.total) {
-                completeQuest(quest.id);
+                // Delay completion slightly for UI feel
+                setTimeout(() => completeQuest(quest.id), 500);
             }
         }
     });

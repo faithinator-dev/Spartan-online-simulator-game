@@ -57,7 +57,7 @@ function generateRandomTerritories(count = 20) {
         const region = regions[Math.floor(Math.random() * regions.length)];
         
         // Random stats based on type
-        let baseDefense, baseResources, basePopulation, baseGarrison;
+        let baseDefense, baseResources, basePopulation, baseGarrison, bonus;
         
         switch(type) {
             case "fortress":
@@ -65,42 +65,49 @@ function generateRandomTerritories(count = 20) {
                 baseResources = 200 + Math.floor(Math.random() * 200);
                 basePopulation = 3000 + Math.floor(Math.random() * 3000);
                 baseGarrison = 300 + Math.floor(Math.random() * 200);
+                bonus = { type: 'defense', value: 10, label: '+10% Combat Defense' };
                 break;
             case "city":
                 baseDefense = 400 + Math.floor(Math.random() * 200);
                 baseResources = 400 + Math.floor(Math.random() * 300);
                 basePopulation = 8000 + Math.floor(Math.random() * 7000);
                 baseGarrison = 200 + Math.floor(Math.random() * 150);
+                bonus = { type: 'xp', value: 15, label: '+15% XP Gain' };
                 break;
             case "trade-hub":
                 baseDefense = 300 + Math.floor(Math.random() * 200);
                 baseResources = 800 + Math.floor(Math.random() * 400);
                 basePopulation = 10000 + Math.floor(Math.random() * 8000);
                 baseGarrison = 150 + Math.floor(Math.random() * 100);
+                bonus = { type: 'gold', value: 20, label: '+20% Gold from Battles' };
                 break;
             case "port":
                 baseDefense = 350 + Math.floor(Math.random() * 150);
                 baseResources = 600 + Math.floor(Math.random() * 300);
                 basePopulation = 7000 + Math.floor(Math.random() * 5000);
                 baseGarrison = 180 + Math.floor(Math.random() * 120);
+                bonus = { type: 'discount', value: 10, label: '10% Equipment Discount' };
                 break;
             case "mountain-pass":
                 baseDefense = 600 + Math.floor(Math.random() * 400);
                 baseResources = 150 + Math.floor(Math.random() * 150);
                 basePopulation = 2000 + Math.floor(Math.random() * 2000);
                 baseGarrison = 250 + Math.floor(Math.random() * 150);
+                bonus = { type: 'stamina', value: 20, label: '+20 Max Stamina' };
                 break;
             case "temple":
                 baseDefense = 250 + Math.floor(Math.random() * 150);
                 baseResources = 300 + Math.floor(Math.random() * 200);
                 basePopulation = 4000 + Math.floor(Math.random() * 3000);
                 baseGarrison = 100 + Math.floor(Math.random() * 100);
+                bonus = { type: 'regen', value: 5, label: '+5 HP Regen/Turn' };
                 break;
             default: // village
                 baseDefense = 200 + Math.floor(Math.random() * 150);
                 baseResources = 250 + Math.floor(Math.random() * 200);
                 basePopulation = 3000 + Math.floor(Math.random() * 4000);
                 baseGarrison = 100 + Math.floor(Math.random() * 100);
+                bonus = { type: 'squad', value: 1, label: '+1 Max Squad Size' };
         }
         
         territories[id] = {
@@ -112,6 +119,7 @@ function generateRandomTerritories(count = 20) {
             resources: baseResources,
             population: basePopulation,
             garrison: baseGarrison,
+            bonus: bonus,
             isPlayerOwned: false,
             connectedTo: [], // Will be filled later
             description: generateDescription(name, type, region)

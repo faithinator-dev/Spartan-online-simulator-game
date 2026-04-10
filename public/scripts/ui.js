@@ -179,6 +179,117 @@ document.querySelectorAll('.leaderboard-tab').forEach(tab => {
     });
 });
 
+// Location Navigation
+function navigateToLocation(locationId) {
+    const cityGrid = document.querySelector('.city-grid');
+    const detailView = document.getElementById('location-detail');
+    const content = document.getElementById('location-content');
+    
+    if (!cityGrid || !detailView || !content) return;
+    
+    cityGrid.classList.add('hidden');
+    detailView.classList.remove('hidden');
+    
+    let html = '';
+    switch(locationId) {
+        case 'barracks':
+            html = `
+                <h2>⚔️ The Royal Barracks</h2>
+                <p>The air is thick with the smell of sweat and iron. Veterans spar with wooden swords while recruits look on in awe.</p>
+                <div class="location-actions">
+                    <div class="action-card">
+                        <h4>Drill Training</h4>
+                        <p>Focus on basic combat drills to sharpen your sword hand.</p>
+                        <button class="btn btn-primary" onclick="performLocationAction('train_combat')">Train (10 Gold)</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>Listen to Veterans</h4>
+                        <p>Hear tales of past battles and learn tactical positioning.</p>
+                        <button class="btn btn-primary" onclick="performLocationAction('train_tactics')">Learn (15 Gold)</button>
+                    </div>
+                </div>
+            `;
+            break;
+        case 'garden':
+            html = `
+                <h2>🌿 The Great Garden</h2>
+                <p>A lush, wild area where Spartan youths learn to live off the land. It is beautiful but dangerous.</p>
+                <div class="location-actions">
+                    <div class="action-card">
+                        <h4>Survival Training</h4>
+                        <p>Practice tracking and finding edible plants in the dense brush.</p>
+                        <button class="btn btn-primary" onclick="performLocationAction('train_survival')">Train (10 Gold)</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>Hunt Small Game</h4>
+                        <p>Track and catch rabbits or birds to hone your hunting instincts.</p>
+                        <button class="btn btn-primary" onclick="performLocationAction('train_hunting')">Hunt (10 Gold)</button>
+                    </div>
+                </div>
+            `;
+            break;
+        case 'market':
+            html = `
+                <h2>💰 Marketplace</h2>
+                <p>Traders from across the Aegean display their wares. The clink of coins and shouting of barters fills the air.</p>
+                <div class="location-actions">
+                    <button class="btn btn-primary" onclick="navigateToView('inventory')">Open Shop</button>
+                    <button class="btn btn-secondary" onclick="performLocationAction('scavenge')">Scavenge for Scraps</button>
+                </div>
+            `;
+            break;
+        case 'agora':
+            html = `
+                <h2>🏛️ The Agora</h2>
+                <p>The center of Spartan political life. Elders debate the future of the city-state here.</p>
+                <div class="location-actions">
+                    <div class="action-card">
+                        <h4>Observe Debates</h4>
+                        <p>Learn how to influence and lead others by watching the masters.</p>
+                        <button class="btn btn-primary" onclick="performLocationAction('train_leadership')">Study (20 Gold)</button>
+                    </div>
+                </div>
+            `;
+            break;
+    }
+    content.innerHTML = html;
+}
+
+function backToCity() {
+    document.querySelector('.city-grid').classList.remove('hidden');
+    document.getElementById('location-detail').classList.add('hidden');
+}
+
+async function performLocationAction(action) {
+    if (!playerCharacter) return;
+    
+    switch(action) {
+        case 'train_combat':
+            await trainSkill('combat');
+            updateQuestProgress('train_location', 'barracks');
+            break;
+        case 'train_tactics':
+            await trainSkill('tactics');
+            break;
+        case 'train_survival':
+            await trainSkill('survival');
+            updateQuestProgress('train_location', 'garden');
+            break;
+        case 'train_hunting':
+            await trainSkill('hunting');
+            break;
+        case 'train_leadership':
+            await trainSkill('leadership');
+            break;
+        case 'scavenge':
+            const foundGold = getRandomInt(1, 5);
+            await addGold(foundGold);
+            showNotification(`You found ${foundGold} gold scraps in the market!`);
+            break;
+    }
+    updateCharacterUI();
+}
+
 // Update dashboard journey text based on level
 function updateDashboardJourney() {
     const journeyText = document.getElementById('journey-text');

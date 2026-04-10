@@ -1,4 +1,4 @@
-// Combat System
+// Combat System - Enhanced with Abilities and Stamina
 
 let currentBattle = null;
 let battleLog = [];
@@ -118,7 +118,12 @@ function initiateBattle(enemy) {
         enemy: enemy,
         turn: 1,
         playerHealth: playerCharacter.health,
-        enemyHealth: enemy.health
+        playerStamina: playerCharacter.stamina || 100,
+        enemyHealth: enemy.health,
+        effects: {
+            player: { defenseBoost: 0, stun: 0 },
+            enemy: { defenseBoost: 0, stun: 0 }
+        }
     };
     
     battleLog = [];
@@ -134,58 +139,64 @@ function initiateBattle(enemy) {
 // Render battle UI
 function renderBattleUI() {
     const arena = document.getElementById('battle-arena');
-    
+    if (!arena) return;
+
     const battleHTML = `
         <div class="battle-header">
-            <h2>⚔️ Battle - Turn ${currentBattle.turn}</h2>
+            <h2>⚔️ Turn ${currentBattle.turn}</h2>
         </div>
         
         <div class="battle-combatants">
-            <div class="combatant player">
-                <div class="combatant-avatar">🛡️</div>
+            <!-- Player Side -->
+            <div id="player-combatant" class="combatant player">
+                <div class="character-avatar avatar-${playerCharacter.avatar || 'spartan_warrior'}" style="width: 100px; height: 100px;"></div>
                 <div class="combatant-name">${playerCharacter.username}</div>
-                <div class="stat-bar-container">
-                    <div class="stat-label">
-                        <span>❤️ HP</span>
-                        <span>${currentBattle.playerHealth}/${playerCharacter.maxHealth}</span>
+                
+                <div class="stat-bars">
+                    <div class="stat-bar-container">
+                        <div class="stat-label"><span>❤️ HP</span><span>${currentBattle.playerHealth}/${playerCharacter.maxHealth}</span></div>
+                        <div class="stat-bar"><div class="stat-fill health" style="width: ${calculatePercentage(currentBattle.playerHealth, playerCharacter.maxHealth)}%"></div></div>
                     </div>
-                    <div class="stat-bar">
-                        <div class="stat-fill health" style="width: ${calculatePercentage(currentBattle.playerHealth, playerCharacter.maxHealth)}%"></div>
+                    <div class="stat-bar-container">
+                        <div class="stat-label"><span>⚡ Stamina</span><span>${currentBattle.playerStamina}/100</span></div>
+                        <div class="stat-bar"><div class="stat-fill" style="width: ${currentBattle.playerStamina}%; background: var(--success);"></div></div>
                     </div>
-                </div>
-                <div style="margin-top: 1rem; text-align: center;">
-                    <div><strong>⚔️ Attack:</strong> ${getTotalAttack()}</div>
-                    <div><strong>🛡️ Defense:</strong> ${getTotalArmor()}</div>
                 </div>
             </div>
             
             <div class="vs-divider">VS</div>
             
-            <div class="combatant enemy">
-                <div class="combatant-avatar">${currentBattle.enemy.avatar}</div>
+            <!-- Enemy Side -->
+            <div id="enemy-combatant" class="combatant enemy">
+                <div class="combatant-avatar" style="font-size: 80px;">${currentBattle.enemy.avatar}</div>
                 <div class="combatant-name">${currentBattle.enemy.name}</div>
-                <div class="stat-bar-container">
-                    <div class="stat-label">
-                        <span>❤️ HP</span>
-                        <span>${currentBattle.enemyHealth}/${currentBattle.enemy.maxHealth}</span>
-                    </div>
-                    <div class="stat-bar">
-                        <div class="stat-fill health" style="width: ${calculatePercentage(currentBattle.enemyHealth, currentBattle.enemy.maxHealth)}%"></div>
+                
+                <div class="stat-bars">
+                    <div class="stat-bar-container">
+                        <div class="stat-label"><span>❤️ HP</span><span>${currentBattle.enemyHealth}/${currentBattle.enemy.maxHealth}</span></div>
+                        <div class="stat-bar"><div class="stat-fill health" style="width: ${calculatePercentage(currentBattle.enemyHealth, currentBattle.enemy.maxHealth)}%"></div></div>
                     </div>
                 </div>
-                <div style="margin-top: 1rem; text-align: center;">
-                    <div><strong>Level:</strong> ${currentBattle.enemy.level}</div>
-                    <div><strong>⚔️ Attack:</strong> ${currentBattle.enemy.strength}</div>
-                    <div><strong>🛡️ Defense:</strong> ${currentBattle.enemy.defense}</div>
-                </div>
+                <div class="enemy-level">Level ${currentBattle.enemy.level}</div>
             </div>
         </div>
         
         <div class="battle-actions">
-            <button class="btn btn-danger" onclick="battleAction('attack')">⚔️ Attack</button>
-            <button class="btn btn-primary" onclick="battleAction('defend')">🛡️ Defend</button>
-            <button class="btn btn-secondary" onclick="battleAction('item')">🧪 Use Item</button>
-            <button class="btn btn-secondary" onclick="battleAction('flee')">🏃 Flee</button>
+            <div class="action-group">
+                <button class="btn btn-danger" onclick="battleAction('attack')">⚔️ Strike</button>
+                <button class="btn btn-primary" onclick="battleAction('defend')">🛡️ Brace (Regen +10⚡)</button>
+            </div>
+            <div class="action-group" style="margin-top: 10px;">
+                <button class="btn ${currentBattle.playerStamina >= 30 ? 'btn-warning' : 'btn-disabled'}" 
+                    onclick="battleAction('skill_bash')" 
+                    ${currentBattle.playerStamina < 30 ? 'disabled' : ''}>💥 Shield Bash (30⚡)</button>
+                <button class="btn ${currentBattle.playerStamina >= 50 ? 'btn-warning' : 'btn-disabled'}" 
+                    onclick="battleAction('skill_phalanx')"
+                    ${currentBattle.playerStamina < 50 ? 'disabled' : ''}>🛡️ Phalanx (50⚡)</button>
+            </div>
+            <div class="action-group" style="margin-top: 10px;">
+                <button class="btn btn-secondary" onclick="battleAction('flee')">🏃 Retreat</button>
+            </div>
         </div>
         
         <div class="battle-log">
@@ -200,109 +211,146 @@ function renderBattleUI() {
 
 // Battle actions
 async function battleAction(action) {
-    if (!currentBattle) return;
+    if (!currentBattle || currentBattle.isProcessing) return;
+    currentBattle.isProcessing = true;
+
+    const playerEl = document.getElementById('player-combatant');
+    const enemyEl = document.getElementById('enemy-combatant');
     
-    let playerDamageDealt = 0;
-    let enemyDamageDealt = 0;
+    // Player Turn
+    let playerActionTaken = false;
     
     switch (action) {
         case 'attack':
-            // Player attacks
             const attackResult = calculateDamage(
                 { strength: getTotalAttack() },
-                { defense: currentBattle.enemy.defense, armor: 0 }
+                { defense: currentBattle.enemy.defense }
             );
-            
-            playerDamageDealt = attackResult.damage;
-            currentBattle.enemyHealth = Math.max(0, currentBattle.enemyHealth - playerDamageDealt);
-            
-            if (attackResult.isCritical) {
-                addToBattleLog(`💥 CRITICAL HIT! You deal ${playerDamageDealt} damage!`, 'critical');
-                playSound('critical');
-            } else {
-                addToBattleLog(`⚔️ You attack for ${playerDamageDealt} damage!`, 'player-action');
-                playSound('attack');
-            }
+            applyDamageToEnemy(attackResult.damage, attackResult.isCritical);
+            playerActionTaken = true;
             break;
             
         case 'defend':
-            addToBattleLog(`🛡️ You brace for the enemy's attack!`, 'player-action');
-            // Reduce incoming damage by 50% this turn
-            currentBattle.defendBonus = 0.5;
+            currentBattle.effects.player.defenseBoost = 2.0; // Double defense
+            currentBattle.playerStamina = Math.min(100, currentBattle.playerStamina + 10);
+            addToBattleLog(`🛡️ You brace for impact and catch your breath! (+10⚡)`, 'player-action');
+            playerActionTaken = true;
+            break;
+
+        case 'skill_bash':
+            if (currentBattle.playerStamina >= 30) {
+                currentBattle.playerStamina -= 30;
+                const bashDamage = Math.floor(getTotalAttack() * 0.7);
+                currentBattle.effects.enemy.stun = 1;
+                applyDamageToEnemy(bashDamage, false);
+                addToBattleLog(`💥 SHIELD BASH! Enemy is stunned! (-30⚡)`, 'critical');
+                playerActionTaken = true;
+            }
+            break;
+
+        case 'skill_phalanx':
+            if (currentBattle.playerStamina >= 50) {
+                currentBattle.playerStamina -= 50;
+                currentBattle.effects.player.defenseBoost = 5.0; // Massive defense
+                addToBattleLog(`🛡️ PHALANX FORMATION! Your defense is impenetrable! (-50⚡)`, 'critical');
+                playerActionTaken = true;
+            }
             break;
             
-        case 'item':
-            // TODO: Implement item usage
-            addToBattleLog(`🧪 No items available!`, 'system');
-            return; // Don't process turn
-            
         case 'flee':
-            const fleeChance = 0.5;
-            if (Math.random() < fleeChance) {
-                addToBattleLog(`🏃 You successfully fled from battle!`, 'system');
-                await sleep(2000);
+            if (Math.random() < 0.4) {
+                addToBattleLog(`🏃 You successfully fled!`, 'system');
+                await sleep(1500);
                 endBattle(false);
                 return;
             } else {
-                addToBattleLog(`🏃 Failed to flee!`, 'system');
+                addToBattleLog(`🏃 Failed to flee!`, 'enemy-action');
+                playerActionTaken = true;
             }
             break;
     }
-    
-    // Check if enemy is defeated
-    if (currentBattle.enemyHealth <= 0) {
-        addToBattleLog(`🎉 Victory! ${currentBattle.enemy.name} has been defeated!`, 'critical');
-        playSound('victory');
-        await sleep(2000);
-        await endBattle(true);
-        return;
+
+    if (playerActionTaken) {
+        renderBattleUI();
+        if (currentBattle.enemyHealth <= 0) {
+            addToBattleLog(`🎉 Victory! ${currentBattle.enemy.name} has been defeated!`, 'critical');
+            await sleep(1500);
+            await endBattle(true);
+            return;
+        }
+
+        await sleep(1000);
+
+        // Enemy Turn
+        if (currentBattle.effects.enemy.stun > 0) {
+            addToBattleLog(`🌀 ${currentBattle.enemy.name} is stunned and skips their turn!`, 'system');
+            currentBattle.effects.enemy.stun--;
+        } else {
+            const enemyAttack = calculateDamage(
+                { strength: currentBattle.enemy.strength },
+                { defense: getTotalArmor() * (currentBattle.effects.player.defenseBoost || 1) }
+            );
+            
+            currentBattle.playerHealth = Math.max(0, currentBattle.playerHealth - enemyAttack.damage);
+            playerEl.classList.add('hit-shake');
+            
+            if (enemyAttack.isCritical) {
+                addToBattleLog(`💥 CRITICAL! ${currentBattle.enemy.name} deals ${enemyAttack.damage} damage!`, 'critical');
+            } else {
+                addToBattleLog(`⚔️ ${currentBattle.enemy.name} strikes for ${enemyAttack.damage} damage!`, 'enemy-action');
+            }
+            
+            setTimeout(() => playerEl.classList.remove('hit-shake'), 200);
+        }
+
+        // Reset turn boosts
+        currentBattle.effects.player.defenseBoost = 0;
+        
+        // Stamina Regen
+        currentBattle.playerStamina = Math.min(100, currentBattle.playerStamina + 5);
+        
+        if (currentBattle.playerHealth <= 0) {
+            addToBattleLog(`💀 You have been defeated...`, 'critical');
+            await sleep(1500);
+            await endBattle(false);
+            return;
+        }
+
+        currentBattle.turn++;
+        currentBattle.isProcessing = false;
+        renderBattleUI();
     }
-    
-    // Enemy turn
-    await sleep(1000);
-    
-    const enemyAttack = calculateDamage(
-        { strength: currentBattle.enemy.strength },
-        { defense: getTotalArmor(), armor: 0 }
-    );
-    
-    enemyDamageDealt = enemyAttack.damage;
-    
-    // Apply defend bonus if active
-    if (currentBattle.defendBonus) {
-        enemyDamageDealt = Math.floor(enemyDamageDealt * currentBattle.defendBonus);
-        currentBattle.defendBonus = null;
-    }
-    
-    currentBattle.playerHealth = Math.max(0, currentBattle.playerHealth - enemyDamageDealt);
-    
-    if (enemyAttack.isCritical) {
-        addToBattleLog(`💥 CRITICAL HIT! ${currentBattle.enemy.name} deals ${enemyDamageDealt} damage!`, 'critical');
-    } else {
-        addToBattleLog(`⚔️ ${currentBattle.enemy.name} attacks for ${enemyDamageDealt} damage!`, 'enemy-action');
-    }
-    
-    // Check if player is defeated
-    if (currentBattle.playerHealth <= 0) {
-        addToBattleLog(`💀 You have been defeated...`, 'critical');
-        playSound('defeat');
-        await sleep(2000);
-        await endBattle(false);
-        return;
-    }
-    
-    // Next turn
-    currentBattle.turn++;
-    renderBattleUI();
 }
 
-// Add to battle log
+function applyDamageToEnemy(damage, isCritical) {
+    const enemyEl = document.getElementById('enemy-combatant');
+    currentBattle.enemyHealth = Math.max(0, currentBattle.enemyHealth - damage);
+    
+    if (enemyEl) {
+        enemyEl.classList.add('hit-shake');
+        if (isCritical) enemyEl.classList.add('crit-flash');
+        
+        setTimeout(() => {
+            enemyEl.classList.remove('hit-shake');
+            enemyEl.classList.remove('crit-flash');
+        }, 300);
+    }
+
+    if (isCritical) {
+        addToBattleLog(`💥 CRITICAL HIT! You deal ${damage} damage!`, 'critical');
+        playSound('critical');
+    } else {
+        addToBattleLog(`⚔️ You deal ${damage} damage!`, 'player-action');
+        playSound('attack');
+    }
+}
+
+// Log and End functions...
 function addToBattleLog(message, type = '') {
     battleLog.push({ message, type });
     renderBattleLog();
 }
 
-// Render battle log
 function renderBattleLog() {
     const logContainer = document.getElementById('battle-log-entries');
     if (!logContainer) return;
@@ -315,39 +363,27 @@ function renderBattleLog() {
     logContainer.scrollTop = logContainer.scrollHeight;
 }
 
-// End battle
 async function endBattle(victory) {
+    playerCharacter.health = currentBattle.playerHealth;
+    playerCharacter.stamina = currentBattle.playerStamina;
+    
     if (victory) {
-        // Award XP and gold
         await addExperience(currentBattle.enemy.xpReward);
         await addGold(currentBattle.enemy.goldReward);
-        
-        // Update battles won
         playerCharacter.battlesWon++;
-        
-        // Increase combat skill
         playerCharacter.skills.combat = Math.min(100, playerCharacter.skills.combat + getRandomInt(1, 3));
-        
-        await saveCharacter();
-        
         showNotification(`🎉 Victory! +${currentBattle.enemy.xpReward} XP, +${currentBattle.enemy.goldReward} Gold`);
     } else {
-        // Penalty for losing
-        playerCharacter.health = Math.floor(playerCharacter.maxHealth * 0.3); // Restore to 30% HP
-        await saveCharacter();
-        
+        playerCharacter.health = Math.floor(playerCharacter.maxHealth * 0.3);
         showNotification(`💀 Defeated! You retreat to recover...`);
     }
     
-    // Update player health to match battle
-    playerCharacter.health = currentBattle.playerHealth;
+    await saveCharacter();
     updateCharacterUI();
     
-    // Reset battle
     currentBattle = null;
     battleLog = [];
     
-    // Show selection again
     document.getElementById('battle-arena').classList.add('hidden');
     document.getElementById('battle-selection').classList.remove('hidden');
 }
