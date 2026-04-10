@@ -16,6 +16,13 @@ auth.onAuthStateChanged(async (user) => {
             console.log('✅ Character loaded, showing game screen');
             showScreen('game');
             
+            // NEW: Initialize social and story systems
+            if (playerCharacter) {
+                if (typeof initializeChat === 'function') initializeChat();
+                if (typeof loadProfileSettings === 'function') loadProfileSettings();
+                if (typeof checkYearlyEvent === 'function') checkYearlyEvent();
+            }
+
             // Initialize game views
             navigateToView('dashboard');
         } catch (error) {

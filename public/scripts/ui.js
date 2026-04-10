@@ -251,6 +251,29 @@ function navigateToLocation(locationId) {
                 </div>
             `;
             break;
+        case 'village':
+            html = `
+                <h2>🏘️ Shadow Village</h2>
+                <p>A humble settlement on the outskirts of Spartan territory. The people here look tired and afraid.</p>
+                <div class="location-actions">
+                    <div class="action-card">
+                        <h4>Talk to Elder</h4>
+                        <p>Hear about the bandit raids and how you can help.</p>
+                        <button class="btn btn-primary" onclick="performLocationAction('village_info')">Listen</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>Help Villagers</h4>
+                        <p>Perform manual labor to earn trust and small rewards.</p>
+                        <button class="btn btn-primary" onclick="performLocationAction('village_help')">Work (1 Day)</button>
+                    </div>
+                    <div class="action-card">
+                        <h4>Patrol Perimeter</h4>
+                        <p>Search for signs of bandit activity in the nearby woods.</p>
+                        <button class="btn btn-danger" onclick="performLocationAction('village_patrol')">Patrol (3 Days)</button>
+                    </div>
+                </div>
+            `;
+            break;
     }
     content.innerHTML = html;
 }
@@ -263,29 +286,55 @@ function backToCity() {
 async function performLocationAction(action) {
     if (!playerCharacter) return;
     
+    let daysPassed = 0;
+
     switch(action) {
         case 'train_combat':
             await trainSkill('combat');
             updateQuestProgress('train_location', 'barracks');
+            daysPassed = 2;
             break;
         case 'train_tactics':
             await trainSkill('tactics');
+            daysPassed = 2;
             break;
         case 'train_survival':
             await trainSkill('survival');
             updateQuestProgress('train_location', 'garden');
+            daysPassed = 3;
             break;
         case 'train_hunting':
             await trainSkill('hunting');
+            daysPassed = 3;
             break;
         case 'train_leadership':
             await trainSkill('leadership');
+            daysPassed = 5;
             break;
         case 'scavenge':
             const foundGold = getRandomInt(1, 5);
             await addGold(foundGold);
             showNotification(`You found ${foundGold} gold scraps in the market!`);
+            daysPassed = 1;
             break;
+        case 'village_info':
+            showNotification("The Elder tells you of a bandit camp to the North.");
+            daysPassed = 0;
+            break;
+        case 'village_help':
+            await addGold(2);
+            showNotification("The villagers appreciate your help! You earned 2 gold.");
+            daysPassed = 1;
+            break;
+        case 'village_patrol':
+            showNotification("You found signs of a bandit group nearby!");
+            updateQuestProgress('patrol_location', 'village');
+            daysPassed = 3;
+            break;
+    }
+    
+    if (daysPassed > 0) {
+        await progressTime(daysPassed);
     }
     updateCharacterUI();
 }

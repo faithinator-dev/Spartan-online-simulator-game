@@ -374,6 +374,18 @@ async function endBattle(victory) {
         playerCharacter.skills.combat = Math.min(100, playerCharacter.skills.combat + getRandomInt(1, 3));
         showNotification(`🎉 Victory! +${currentBattle.enemy.xpReward} XP, +${currentBattle.enemy.goldReward} Gold`);
     } else {
+        // PERMADEATH CHANCE (10%)
+        const deathChance = Math.random();
+        if (deathChance < 0.10) {
+            alert("💀 THE GODS HAVE SPOKEN... You have fallen in battle. Your legend ends here.");
+            // Delete character and logout
+            if (currentUser) {
+                await db.collection('users').doc(currentUser.uid).delete();
+                location.reload(); // Hard reset to login
+            }
+            return;
+        }
+        
         playerCharacter.health = Math.floor(playerCharacter.maxHealth * 0.3);
         showNotification(`💀 Defeated! You retreat to recover...`);
     }

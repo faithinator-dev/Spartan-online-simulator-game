@@ -48,6 +48,10 @@ async function createCharacter(uid, username) {
         battlesWon: 0,
         territoriesConquered: 0,
         
+        // Time System
+        year: 480, // 480 BC
+        day: 1,
+        
         // Squad
         squad: null,
         squadSize: 0,
@@ -130,6 +134,7 @@ function updateCharacterUI() {
     document.getElementById('char-rank').textContent = playerCharacter.rank;
     document.getElementById('char-level').textContent = playerCharacter.level;
     document.getElementById('char-age').textContent = playerCharacter.age;
+    document.getElementById('char-year').textContent = `${playerCharacter.year || 480} BC`;
     document.getElementById('char-location').textContent = playerCharacter.location;
     
     // Health bar
@@ -357,6 +362,27 @@ function getTotalAttack() {
         total += playerCharacter.equipment.weapon.damage;
     }
     return total;
+}
+
+// Progress time (called after actions)
+async function progressTime(days = 1) {
+    if (!playerCharacter) return;
+    
+    playerCharacter.day = (playerCharacter.day || 1) + days;
+    
+    // 365 days in a year
+    if (playerCharacter.day > 365) {
+        playerCharacter.day = 1;
+        playerCharacter.year = (playerCharacter.year || 480) - 1; // BC counts backwards
+        playerCharacter.age++;
+        showNotification(`🎉 A year has passed! You are now ${playerCharacter.age} years old.`, 5000);
+    }
+    
+    // Update UI if on dashboard
+    const yearEl = document.getElementById('char-year');
+    if (yearEl) yearEl.textContent = `${playerCharacter.year} BC`;
+    
+    await saveCharacter();
 }
 
 console.log("✅ Character system loaded");

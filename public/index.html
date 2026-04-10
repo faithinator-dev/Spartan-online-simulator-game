@@ -88,6 +88,10 @@
                         <span>Age:</span>
                         <span id="char-age">10</span>
                     </div>
+                    <div class="stat-row">
+                        <span>Year:</span>
+                        <span id="char-year">480 BC</span>
+                    </div>
                     
                     <div class="stat-bar-container">
                         <div class="stat-label">
@@ -190,6 +194,9 @@
                     <button class="nav-btn" data-view="skills">
                         <span>📊</span> Skills
                     </button>
+                    <button class="nav-btn" data-view="profile">
+                        <span>⚙️</span> Profile
+                    </button>
                 </div>
 
                 <!-- Content Views -->
@@ -251,6 +258,12 @@
                             <div class="location-icon">🏛️</div>
                             <h3>The Agora</h3>
                             <p>Listen to the elders and improve your leadership and tactics.</p>
+                            <button class="btn btn-small">Enter</button>
+                        </div>
+                        <div class="city-location" onclick="navigateToLocation('village')">
+                            <div class="location-icon">🏘️</div>
+                            <h3>Shadow Village</h3>
+                            <p>A small settlement plagued by bandits. Seek justice and glory here.</p>
                             <button class="btn btn-small">Enter</button>
                         </div>
                     </div>
@@ -400,14 +413,42 @@
                 </div>
 
                 <div id="leaderboard-view" class="content-view">
-                    <h1>🏆 Leaderboard</h1>
-                    <div class="leaderboard-tabs">
-                        <button class="leaderboard-tab active" data-category="level">Top Warriors</button>
-                        <button class="leaderboard-tab" data-category="territories">Conquerors</button>
-                        <button class="leaderboard-tab" data-category="rating">Highest Rated</button>
+                    <h1>🏆 Hall of Heroes</h1>
+                    <div class="leaderboard-container" style="display: grid; grid-template-columns: 1fr 350px; gap: 20px;">
+                        <div class="leaderboard-main">
+                            <div class="leaderboard-tabs">
+                                <button class="leaderboard-tab active" data-category="level">Top Warriors</button>
+                                <button class="leaderboard-tab" data-category="territories">Conquerors</button>
+                            </div>
+                            <div id="leaderboard-list" class="leaderboard-list">
+                                <!-- Leaderboard will be dynamically loaded -->
+                            </div>
+                        </div>
+                        <div class="global-chat">
+                            <h3>🗣️ Global Chat</h3>
+                            <div id="chat-messages" class="chat-messages" style="height: 400px; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.9rem;">
+                                <p style="color: #888; text-align: center;">Connecting to Agora...</p>
+                            </div>
+                            <div class="chat-input-area" style="display: flex; gap: 5px;">
+                                <input type="text" id="chat-input" placeholder="Speak, Spartan..." style="flex: 1; padding: 8px; background: #222; border: 1px solid var(--bronze); color: white;">
+                                <button class="btn btn-small" onclick="sendChatMessage()" style="width: auto; padding: 0 15px;">Send</button>
+                            </div>
+                        </div>
                     </div>
-                    <div id="leaderboard-list" class="leaderboard-list">
-                        <!-- Leaderboard will be dynamically loaded -->
+                </div>
+
+                <div id="profile-view" class="content-view">
+                    <h1>⚙️ Warrior Profile</h1>
+                    <div class="dashboard-card" style="max-width: 600px; margin: 0 auto;">
+                        <div class="input-group" style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 5px; color: var(--gold);">Warrior Bio (Public)</label>
+                            <textarea id="settings-bio" placeholder="Tell your legend..." style="width: 100%; height: 100px; padding: 10px; background: #222; border: 1px solid var(--bronze); color: white;"></textarea>
+                        </div>
+                        <div class="input-group" style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 5px; color: var(--gold);">Status Message</label>
+                            <input type="text" id="settings-status" placeholder="Current mood (e.g. Preparing for war)" style="width: 100%; padding: 10px; background: #222; border: 1px solid var(--bronze); color: white;">
+                        </div>
+                        <button class="btn btn-primary" onclick="saveProfileSettings()">Save Profile</button>
                     </div>
                 </div>
 
