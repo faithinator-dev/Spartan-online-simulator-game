@@ -31,6 +31,10 @@ function navigateToView(viewName) {
 // Load view-specific data
 function loadViewData(viewName) {
     switch (viewName) {
+        case 'dashboard':
+            if (typeof renderChronicle === 'function') renderChronicle();
+            updateDashboardJourney();
+            break;
         case 'map':
             if (Object.keys(territories).length === 0) {
                 initializeTerritories();
@@ -47,6 +51,10 @@ function loadViewData(viewName) {
             break;
         case 'leaderboard':
             loadLeaderboard();
+            if (typeof initializeChat === 'function') initializeChat();
+            break;
+        case 'profile':
+            if (typeof loadProfileSettings === 'function') loadProfileSettings();
             break;
     }
 }

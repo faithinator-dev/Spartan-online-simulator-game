@@ -648,13 +648,50 @@ body {
 }
 
 .city-location {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.6);
     border: 2px solid var(--gold);
     border-radius: 10px;
-    padding: 25px;
+    padding: 0; /* Remove padding to let image take top space */
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.location-image {
+    width: 100%;
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    border-bottom: 2px solid var(--gold);
+    filter: sepia(0.3) contrast(1.1);
+}
+
+.location-info-box {
+    padding: 20px;
+}
+
+.city-location:hover .location-image {
+    filter: sepia(0) contrast(1.2);
+    transform: scale(1.05);
+}
+
+/* Map Overhaul */
+.map-container {
+    background-image: url('https://images.unsplash.com/photo-1533154683836-84e5ad0c1e3a?auto=format&fit=crop&q=80&w=1000'); /* Old Parchment Texture */
+    background-size: cover;
+    border: 5px solid var(--bronze);
+    border-radius: 15px;
+    padding: 20px;
+    position: relative;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+}
+
+.map-grid {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(2px);
 }
 
 .city-location:hover {

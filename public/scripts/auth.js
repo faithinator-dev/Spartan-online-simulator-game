@@ -20,7 +20,15 @@ auth.onAuthStateChanged(async (user) => {
             if (playerCharacter) {
                 if (typeof initializeChat === 'function') initializeChat();
                 if (typeof loadProfileSettings === 'function') loadProfileSettings();
-                if (typeof checkYearlyEvent === 'function') checkYearlyEvent();
+                
+                // Story Engine Entry
+                if (typeof renderStoryNode === 'function') {
+                    if (playerCharacter.currentStoryNode) {
+                        renderStoryNode(playerCharacter.currentStoryNode);
+                    } else {
+                        startNewStory();
+                    }
+                }
             }
 
             // Initialize game views

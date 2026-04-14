@@ -7,6 +7,21 @@ async function createCharacter(uid, username) {
     const age = getRandomInt(8, 16); // Random starting age
     const now = Date.now();
     
+    // LEGACY CHECK: Look for previous character data to inherit
+    let legacyGold = 0;
+    let legacyRep = 0;
+    
+    try {
+        if (typeof firebase !== 'undefined' && !DEMO_MODE) {
+            const legacyDoc = await db.collection('users').doc(uid).get();
+            if (legacyDoc.exists) {
+                const data = legacyDoc.data();
+                legacyGold = Math.floor((data.gold || 0) * 0.20);
+                legacyRep = Math.floor((data.reputation || 0) * 0.20);
+            }
+        }
+    } catch (e) { console.log("No legacy found."); }
+
     const newCharacter = {
         uid: uid,
         username: username,
@@ -21,7 +36,7 @@ async function createCharacter(uid, username) {
         strength: 20,
         defense: 5,
         agility: 10,
-        stamina: 50,
+        stamina: 100,
         
         // Equipment
         equipment: {
@@ -43,8 +58,8 @@ async function createCharacter(uid, username) {
         },
         
         // Progression
-        gold: 50,
-        reputation: 0,
+        gold: 50 + legacyGold,
+        reputation: legacyRep,
         battlesWon: 0,
         territoriesConquered: 0,
         
@@ -62,7 +77,15 @@ async function createCharacter(uid, username) {
         
         // Timestamps
         createdAt: now,
-        lastActive: now
+        lastActive: now,
+
+        // Narrative
+        chronicle: [{
+            year: 480,
+            title: "🌅 A New Legend Begins",
+            result: username + " begins the Agoge training in Sparta.",
+            timestamp: now
+        }]
     };
     
     try {
@@ -75,12 +98,14 @@ async function createCharacter(uid, username) {
         await db.collection('users').doc(uid).set(newCharacter);
         playerCharacter = newCharacter;
         console.log('✅ Character created successfully:', username);
-        console.log('Character data:', newCharacter);
+        
+        if (legacyGold > 0) {
+            showNotification(`🏛️ Inherited ${legacyGold} gold from your ancestor.`);
+        }
+
         return newCharacter;
     } catch (error) {
         console.error('❌ Error creating character:', error);
-        console.error('UID:', uid);
-        console.error('Username:', username);
         throw new Error('Failed to create character: ' + error.message);
     }
 }
@@ -199,14 +224,23 @@ function updateEquipmentUI() {
     
     slots.forEach(slot => {
         const item = playerCharacter.equipment[slot];
-        const el = document.getElementById(`equipped-${slot}`);
+        const slotEl = document.querySelector(`.equipment-slot[data-slot="${slot}"]`);
+        const itemEl = document.getElementById(`equipped-${slot}`);
         
-        if (el) {
+        if (slotEl) {
+            // Remove old sprite classes
+            slotEl.className = `equipment-slot`;
+            if (item && item.sprite) {
+                slotEl.classList.add(item.sprite);
+            }
+        }
+
+        if (itemEl) {
             if (item) {
                 const statText = item.armor ? `(+${item.armor} armor)` : `(+${item.damage} dmg)`;
-                el.textContent = `${item.name} ${statText}`;
+                itemEl.textContent = `${item.name} ${statText}`;
             } else {
-                el.textContent = 'Empty';
+                itemEl.textContent = 'Empty';
             }
         }
     });
